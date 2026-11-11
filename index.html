@@ -195,6 +195,13 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
   #hoja ul{margin:4pt 0 0;padding-left:16pt}
   #hoja .pie{margin-top:14pt;color:#555;font-size:9pt}
 }
+#envio{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.envio-in{background:var(--panel);color:var(--fg);width:100%;max-width:560px;max-height:92vh;border-radius:14px 14px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
+.envio-in h2{font-size:20px;color:var(--olive)}
+.envio-img{overflow:auto;border:1px solid var(--line);border-radius:8px;min-height:120px;flex:1 1 auto}
+.envio-img img{display:block;width:100%}
+.envio-in .actions .btn.primary{flex:1 1 100%;min-height:52px;font-size:18px}
+@media print{#envio{display:none!important}}
 </style>
 </head>
 <body>
@@ -367,6 +374,16 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
   </main>
 </div>
 
+<div id="envio" hidden><div class="envio-in">
+  <h2 id="envioTit"></h2>
+  <p id="envioMsg" class="note"></p>
+  <div class="envio-img"><img id="envioImg" alt="Vista de la hoja"></div>
+  <div class="actions">
+    <button class="btn primary" id="envioOk">Enviar</button>
+    <button class="btn" id="envioGuardar">Guardar en el teléfono</button>
+    <button class="btn quiet" id="envioCerrar">Cerrar</button>
+  </div>
+</div></div>
 <div id="hoja"></div>
 <div id="barra"><div class="in">
   <p id="guia"></p>
@@ -746,10 +763,15 @@ async function hojaCanvas(){
   x.textAlign="left";x.fillStyle="#777";x.font=F(22);x.fillText(fit("Precios de referencia estimados para Tijuana, B.C. ("+(BASE.FECHA||"")+").",W-2*M),M,H-70);x.fillText(fit("Pueden variar según la tienda y el día; confirma antes de comprar.",W-2*M),M,H-38);
   return{c,d};
 }
-async function compartir(blob,nombre,titulo){
+function compartir(blob,nombre,titulo,vista){
   const file=new File([blob],nombre,{type:blob.type});
-  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:titulo});return}}catch(e){if(e&&e.name==="AbortError")return}
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nombre;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);toast("Archivo descargado. Compártelo desde tus descargas.");
+  const puede=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]}));
+  const o=$("envio");$("envioImg").src=vista;$("envioTit").textContent=blob.type==="application/pdf"?"Tu PDF está listo":"Tu imagen está lista";
+  $("envioMsg").textContent=puede?"Toca «Enviar» y elige WhatsApp, correo o la app que quieras.":"Este navegador no deja enviar directo. Mantén el dedo sobre la imagen y elige «Compartir imagen», o guárdala en el teléfono.";
+  $("envioOk").hidden=!puede;o.hidden=false;
+  $("envioOk").onclick=()=>{navigator.share({files:[file],title:titulo}).then(()=>{o.hidden=true}).catch(e=>{if(e&&e.name==="AbortError")return;$("envioMsg").textContent="No se pudo abrir el menú de enviar ("+(e&&e.name||"error")+"). Mantén el dedo sobre la imagen y elige «Compartir imagen», o guárdala en el teléfono."})};
+  $("envioGuardar").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nombre;a.target="_blank";document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);$("envioMsg").textContent="Guardado. Búscalo en la carpeta Descargas del teléfono (app Mis archivos)."};
+  $("envioCerrar").onclick=()=>{o.hidden=true};
 }
 const nombreArch=t=>(t.replace(/[^\w\-áéíóúñ ]/gi,"").trim()||"costeo");
 function pdfDeJpeg(jpg,W,H){
@@ -764,8 +786,8 @@ function pdfDeJpeg(jpg,W,H){
   const xr=len;add("xref\n0 6\n0000000000 65535 f \n");for(let i=1;i<=5;i++)add(String(off[i]).padStart(10,"0")+" 00000 n \n");add(`trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n${xr}\n%%EOF`);
   return new Blob(parts,{type:"application/pdf"});
 }
-$("btnImagen").onclick=async()=>{const r=await hojaCanvas();if(!r)return;r.c.toBlob(b=>compartir(b,nombreArch(r.d.titulo)+".png",r.d.titulo),"image/png")};
-$("btnPDFc").onclick=async()=>{const r=await hojaCanvas();if(!r)return;const bin=atob(r.c.toDataURL("image/jpeg",0.92).split(",")[1]);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);compartir(pdfDeJpeg(u,r.c.width,r.c.height),nombreArch(r.d.titulo)+".pdf",r.d.titulo)};
+$("btnImagen").onclick=async()=>{const r=await hojaCanvas();if(!r)return;r.c.toBlob(b=>compartir(b,nombreArch(r.d.titulo)+".png",r.d.titulo,r.c.toDataURL("image/jpeg",0.8)),"image/png")};
+$("btnPDFc").onclick=async()=>{const r=await hojaCanvas();if(!r)return;const bin=atob(r.c.toDataURL("image/jpeg",0.92).split(",")[1]);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);compartir(pdfDeJpeg(u,r.c.width,r.c.height),nombreArch(r.d.titulo)+".pdf",r.d.titulo,r.c.toDataURL("image/jpeg",0.8))};
 
 (function(){const a=$("autor");try{a.value=localStorage.getItem("costeo.autor")||""}catch{}a.oninput=()=>{try{localStorage.setItem("costeo.autor",a.value)}catch{}}})();
 
