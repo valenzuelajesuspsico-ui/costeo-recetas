@@ -171,7 +171,7 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
 .sig{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--accent)}
 @media (prefers-reduced-motion:no-preference){.sig{animation:lat 1.6s ease-in-out infinite}@keyframes lat{50%{box-shadow:0 0 0 3px var(--bg),0 0 0 9px transparent}}}
 .foto-box{display:flex;flex-direction:column;gap:10px}
-.foto-box img{width:100%;max-height:420px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.foto-box img{width:100%;max-height:240px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .foto-vacia{border:1px dashed var(--line);border-radius:8px;padding:22px 12px;text-align:center;color:var(--muted);font-size:14px}
 .recetas button.conmini{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;box-sizing:border-box}
 .recetas .mini{width:44px;height:44px;object-fit:cover;border-radius:6px;grid-row:1/3}
@@ -185,7 +185,7 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
   #hoja{display:block;color:#000;font:11pt/1.4 system-ui,sans-serif;padding:0}
   #hoja h1{font:400 22pt Georgia,serif;margin:0 0 2pt}
   #hoja .meta{color:#444;margin:0 0 10pt}
-  #hoja img{max-width:60%;max-height:200pt;border-radius:4pt;margin:0 0 10pt}
+  #hoja img{max-width:40%;max-height:150pt;border-radius:4pt;margin:0 0 10pt}
   #hoja table{border-collapse:collapse;width:100%;font-size:10pt}
   #hoja th{text-align:left;border-bottom:1.5pt solid #000;padding:4pt 6pt}
   #hoja td{border-bottom:.5pt solid #bbb;padding:4pt 6pt}
@@ -245,7 +245,7 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
         <li class="paso"><b>Si algo sale mal</b>, no se rompe nada: toca «+ Nueva» y empieza de nuevo. Para quitar un ingrediente toca la ✕. Para borrar una receta hay que tocar «Eliminar» dos veces, así no se borra por accidente.</li>
         <li class="paso"><b>De vez en cuando toca «Respaldar todo»</b> (en el menú de recetas). Se descarga un archivo con todas tus recetas; si cambias de teléfono, lo cargas con «Restaurar un respaldo» y recuperas todo.</li>
         <li class="paso"><b>Elige dónde vas a comprar</b> en el paso 2. Los precios se calculan para esa tienda, para que no tengas que ir a cuatro lugares. Si quieres saber si te conviene otra, elígela en «Comparar con otra tienda» y verás los dos totales.</li>
-        <li class="paso"><b>Para mandar el costeo</b> a alguien, toca «Compartir como imagen» (sale una hoja con ingredientes, costos y total, lista para WhatsApp) o «Imprimir o guardar PDF».</li>
+        <li class="paso"><b>Para mandar el costeo</b> a alguien, toca «Compartir como imagen» o «Compartir como PDF»: sale una hoja con ingredientes, costos y total, y el teléfono te pregunta por dónde mandarla (WhatsApp, correo, etc.). «Imprimir» la manda a la impresora.</li>
         <li class="paso"><b>Puedes cambiar los colores</b> en «Estilo», arriba a la derecha: Mole y chile, Huerto y betabel, Pizarra de bistró (fondo oscuro), Mantel blanco o Sal de mar. La página recuerda tu elección.</li>
         <li class="paso"><b>Para tenerla como app en el teléfono</b>: abre la dirección de abajo en Chrome, toca los tres puntos del menú y elige «Instalar aplicación» o «Agregar a pantalla de inicio». Queda un icono como cualquier app, abre sin internet y se actualiza sola cada lunes con precios nuevos; no hay que reemplazar nada.</li>
       </ol>
@@ -355,7 +355,8 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
         <button class="btn primary" id="btnGuardar">Guardar receta</button>
         <button class="btn" id="btnDuplicar" hidden>Duplicar</button>
         <button class="btn olive" id="btnImagen">Compartir como imagen</button>
-        <button class="btn" id="btnPDF">Imprimir o guardar PDF</button>
+        <button class="btn olive" id="btnPDFc">Compartir como PDF</button>
+        <button class="btn" id="btnPDF">Imprimir</button>
         <button class="btn" id="btnCopiar">Copiar resumen</button>
         <button class="btn" id="btnCSV">Descargar CSV</button>
         <button class="btn danger quiet" id="btnBorrar" hidden>Eliminar receta</button>
@@ -717,12 +718,12 @@ $("btnPDF").onclick=()=>{
   h.append(E("p",(actual.fuente?"Fuente de la receta: "+actual.fuente+". ":"")+"Precios de referencia para Tijuana, B.C. ("+(BASE.FECHA||"")+"); pueden variar. Hecho con Costeo de Recetas.","pie"));
   window.print();
 };
-$("btnImagen").onclick=async()=>{
+async function hojaCanvas(){
   const d=datosHoja();if(!d.filas.length){toast("Primero agrega ingredientes.");return}
   const cs=getComputedStyle(document.documentElement),col=v=>cs.getPropertyValue(v).trim()||"#333";
   const W=1080,M=56,rowH=58,cmp=!!d.Bn;let foto=null;
   if(fotoActual){foto=await new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src=fotoActual})}
-  const fh=foto?Math.min(520,Math.round((W-2*M)*foto.height/foto.width)):0;
+  const fh=foto?Math.min(340,Math.round((W-2*M)*foto.height/foto.width)):0;
   const H=250+(foto?fh+30:0)+70+d.filas.length*rowH+(cmp?330:290)+90;
   const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
   const F=(s,w)=>`${w||400} ${s}px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif`;
@@ -732,7 +733,7 @@ $("btnImagen").onclick=async()=>{
   x.fillStyle="#1d1d1b";x.font=`400 54px Georgia,"Times New Roman",serif`;x.fillText(fit(d.titulo,W-2*M),M,146);
   x.fillStyle="#666";x.font=F(28);x.fillText(fit(d.meta,W-2*M),M,196);
   let y=230;
-  if(foto){const w=W-2*M,sh=foto.width*fh/w,sy=Math.max(0,(foto.height-sh)/2);x.drawImage(foto,0,sy,foto.width,Math.min(sh,foto.height),M,y,w,fh);y+=fh+30}
+  if(foto){const fw=Math.round(fh*foto.width/foto.height);x.drawImage(foto,M,y,fw,fh);y+=fh+30}
   const cA=cmp?W-M-190:W-M,cB=W-M,cQ=cmp?W-M-390:W-M-200,nameW=cQ-M-170;
   x.font=F(22,700);x.fillStyle="#666";x.textAlign="left";x.fillText("INGREDIENTE",M,y+36);x.textAlign="right";x.fillText("CANTIDAD",cQ,y+36);x.fillText(fit(d.A.toUpperCase(),180),cA,y+36);if(cmp)x.fillText(fit(d.Bn.toUpperCase(),180),cB,y+36);
   y+=52;x.fillStyle="#1d1d1b";x.fillRect(M,y,W-2*M,3);y+=4;
@@ -741,10 +742,28 @@ $("btnImagen").onclick=async()=>{
   linea("Insumos",mxn(d.sub),d.B?mxn(d.B.tot/(1+(actual.imprevistos||0)/100)):"");linea("Imprevistos "+(actual.imprevistos||0)+" %",mxn(d.imp),"");linea("Total",mxn(d.tot),d.B?mxn(d.B.tot):"",true);linea("Por comensal",mxn(d.por),d.B?mxn(d.B.tot/d.n):"");
   if(cmp&&d.B){y+=14;const df=d.B.tot-d.tot;x.fillStyle=col("--cream");x.fillRect(M,y,W-2*M,64);x.textAlign="left";x.fillStyle="#1d1d1b";x.font=F(26,600);x.fillText(fit(Math.abs(df)<1?"Cuesta prácticamente lo mismo en las dos tiendas.":(df>0?`Comprar en ${d.A} ahorra ${mxn(df)}.`:`Comprar en ${d.Bn} ahorra ${mxn(-df)}.`),W-2*M-40),M+20,y+42);y+=64}
   x.textAlign="left";x.fillStyle="#777";x.font=F(22);x.fillText(fit("Precios de referencia para Tijuana, B.C. ("+(BASE.FECHA||"")+"); pueden variar.",W-2*M),M,H-40);
-  c.toBlob(async blob=>{const nombre=(d.titulo.replace(/[^\w\-áéíóúñ ]/gi,"").trim()||"costeo")+".png";const file=new File([blob],nombre,{type:"image/png"});
-    try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:d.titulo});return}}catch(e){if(e&&e.name==="AbortError")return}
-    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nombre;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);toast("Imagen descargada.")},"image/png");
-};
+  return{c,d};
+}
+async function compartir(blob,nombre,titulo){
+  const file=new File([blob],nombre,{type:blob.type});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:titulo});return}}catch(e){if(e&&e.name==="AbortError")return}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nombre;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);toast("Archivo descargado. Compártelo desde tus descargas.");
+}
+const nombreArch=t=>(t.replace(/[^\w\-áéíóúñ ]/gi,"").trim()||"costeo");
+function pdfDeJpeg(jpg,W,H){
+  const Wp=612,Hp=Math.round(612*H/W),enc=new TextEncoder(),parts=[],off=[];let len=0;
+  const add=s=>{const b=typeof s==="string"?enc.encode(s):s;parts.push(b);len+=b.length};
+  const obj=(n,f)=>{off[n]=len;add(n+" 0 obj\n");f();add("\nendobj\n")};
+  add("%PDF-1.4\n");
+  obj(1,()=>add("<</Type/Catalog/Pages 2 0 R>>"));obj(2,()=>add("<</Type/Pages/Kids[3 0 R]/Count 1>>"));
+  obj(3,()=>add(`<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${Wp} ${Hp}]/Resources<</XObject<</Im0 4 0 R>>>>/Contents 5 0 R>>`));
+  obj(4,()=>{add(`<</Type/XObject/Subtype/Image/Width ${W}/Height ${H}/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ${jpg.length}>>\nstream\n`);add(jpg);add("\nendstream")});
+  const cs=`q ${Wp} 0 0 ${Hp} 0 0 cm /Im0 Do Q`;obj(5,()=>add(`<</Length ${cs.length}>>\nstream\n${cs}\nendstream`));
+  const xr=len;add("xref\n0 6\n0000000000 65535 f \n");for(let i=1;i<=5;i++)add(String(off[i]).padStart(10,"0")+" 00000 n \n");add(`trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n${xr}\n%%EOF`);
+  return new Blob(parts,{type:"application/pdf"});
+}
+$("btnImagen").onclick=async()=>{const r=await hojaCanvas();if(!r)return;r.c.toBlob(b=>compartir(b,nombreArch(r.d.titulo)+".png",r.d.titulo),"image/png")};
+$("btnPDFc").onclick=async()=>{const r=await hojaCanvas();if(!r)return;const bin=atob(r.c.toDataURL("image/jpeg",0.92).split(",")[1]);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);compartir(pdfDeJpeg(u,r.c.width,r.c.height),nombreArch(r.d.titulo)+".pdf",r.d.titulo)};
 
 /* ---------- foto del platillo ---------- */
 function pintarFoto(){const f=fotoActual;$("fotoImg").hidden=!f;if(f)$("fotoImg").src=f;$("fotoVacia").hidden=!!f;$("btnFotoQuitar").hidden=!f;$("btnFoto").textContent=f?"Cambiar foto":"Agregar foto";$("btnFotoQuitar").textContent="Quitar foto"}
