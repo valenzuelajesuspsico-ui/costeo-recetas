@@ -20,6 +20,10 @@
 :root[data-palette="mole"]{--bg:#fbf6ee;--panel:#ffffff;--fg:#2d1f19;--muted:#7a655a;--line:#e6d9cb;--accent:#9b2d20;--accent-fg:#ffffff;--olive:#4a2c22;--cream:#f3e7d6;--ok:#4f7a3f;--warn:#b7791f;--bad:#9b2d20;--display:Georgia,"Times New Roman",serif}
 :root[data-palette="huerto"]{--bg:#f7faf3;--panel:#ffffff;--fg:#1f2a1f;--muted:#5f6f5f;--line:#d8e2d4;--accent:#a3245d;--accent-fg:#ffffff;--olive:#2f6b3a;--cream:#e9f1e3;--ok:#2f6b3a;--warn:#b07a1f;--bad:#a3245d;--display:Georgia,"Times New Roman",serif}
 :root[data-palette="pizarra"]{--bg:#23272b;--panel:#2d3237;--fg:#f1efe8;--muted:#b3b6ad;--line:#454b51;--accent:#e6b84a;--accent-fg:#23272b;--olive:#9fc0a0;--cream:#363c42;--ok:#9fc0a0;--warn:#e6b84a;--bad:#f08a7a;--olive-fg:#23272b;--display:Georgia,"Times New Roman",serif;color-scheme:dark}
+:root[data-palette="mantel"]{--bg:#ffffff;--panel:#ffffff;--fg:#1d1d1b;--muted:#6e6e69;--line:#e7e7e2;--accent:#1d1d1b;--accent-fg:#ffffff;--olive:#2f5d46;--olive-fg:#ffffff;--cream:#f4f4f0;--ok:#2f5d46;--warn:#9a6a12;--bad:#a8362a;--display:var(--body);color-scheme:light}
+:root[data-palette="sal"]{--bg:#f5f7f8;--panel:#ffffff;--fg:#22303a;--muted:#667682;--line:#e1e6ea;--accent:#1f6f78;--accent-fg:#ffffff;--olive:#22303a;--olive-fg:#ffffff;--cream:#eaf0f2;--ok:#1f6f78;--warn:#9a6a12;--bad:#b0453a;--display:var(--body);color-scheme:light}
+:root[data-palette="mantel"] .card,:root[data-palette="sal"] .card{border-radius:6px}
+:root[data-palette="mantel"] h1,:root[data-palette="mantel"] h2,:root[data-palette="sal"] h1,:root[data-palette="sal"] h2{font-weight:600;letter-spacing:-.01em}
 :root[data-palette="salvia"]{--bg:#f7f6f2;--panel:#ffffff;--fg:#2a2a2a;--muted:#6b6b66;--line:#dfe0d8;--accent:#7a3b5e;--accent-fg:#ffffff;--olive:#5c7a5a;--cream:#eef1ea;--ok:#3f7a3f;--warn:#a4661a;--bad:#a83a2c;--display:Georgia,"Times New Roman",serif}
 @media (prefers-color-scheme:dark){
  :root{--olive-fg:#1c1a17;--bg:#1c1a17;--panel:#25221e;--fg:#ece6dc;--muted:#a69e92;--line:#3b3630;--accent:#d9754a;--accent-fg:#1c1a17;--olive:#9db07e;--cream:#2e2a24;--ok:#7fbf7f;--warn:#d9a24a;--bad:#e2715f;color-scheme:dark}
@@ -166,6 +170,12 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
 #barra .tt span{font-size:13px;color:var(--muted)}
 .sig{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--accent)}
 @media (prefers-reduced-motion:no-preference){.sig{animation:lat 1.6s ease-in-out infinite}@keyframes lat{50%{box-shadow:0 0 0 3px var(--bg),0 0 0 9px transparent}}}
+.foto-box{display:flex;flex-direction:column;gap:10px}
+.foto-box img{width:100%;max-height:420px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.foto-vacia{border:1px dashed var(--line);border-radius:8px;padding:22px 12px;text-align:center;color:var(--muted);font-size:14px}
+.recetas button.conmini{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;box-sizing:border-box}
+.recetas .mini{width:44px;height:44px;object-fit:cover;border-radius:6px;grid-row:1/3}
+.recetas button.conmini>span{grid-column:2}
 </style>
 </head>
 <body>
@@ -175,7 +185,7 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
   <div class="tools">
     <button class="btn quiet" id="btnAyuda">? Ayuda</button>
     <label class="sub" for="paleta">Estilo</label>
-    <select id="paleta"><option value="mole">Mole y chile</option><option value="huerto">Huerto y betabel</option><option value="pizarra">Pizarra de bistró</option></select>
+    <select id="paleta"><option value="mole">Mole y chile</option><option value="huerto">Huerto y betabel</option><option value="pizarra">Pizarra de bistró</option><option value="mantel">Mantel blanco</option><option value="sal">Sal de mar</option></select>
   </div>
 </header>
 
@@ -215,7 +225,7 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
         <li class="paso"><b>Toca «Guardar receta»</b> para que quede en la lista de la izquierda (en el teléfono, en el botón «☰ Recetas guardadas»). Ahí puedes volver a abrirla cuando quieras.</li>
         <li class="paso"><b>Si algo sale mal</b>, no se rompe nada: toca «+ Nueva» y empieza de nuevo. Para quitar un ingrediente toca la ✕. Para borrar una receta hay que tocar «Eliminar» dos veces, así no se borra por accidente.</li>
         <li class="paso"><b>De vez en cuando toca «Respaldar todo»</b> (en el menú de recetas). Se descarga un archivo con todas tus recetas; si cambias de teléfono, lo cargas con «Restaurar un respaldo» y recuperas todo.</li>
-        <li class="paso"><b>Puedes cambiar los colores</b> en «Estilo», arriba a la derecha: Mole y chile, Huerto y betabel o Pizarra de bistró (fondo oscuro). La página recuerda tu elección.</li>
+        <li class="paso"><b>Puedes cambiar los colores</b> en «Estilo», arriba a la derecha: Mole y chile, Huerto y betabel, Pizarra de bistró (fondo oscuro), Mantel blanco o Sal de mar. La página recuerda tu elección.</li>
         <li class="paso"><b>Para tenerla como app en el teléfono</b>: abre la dirección de abajo en Chrome, toca los tres puntos del menú y elige «Instalar aplicación» o «Agregar a pantalla de inicio». Queda un icono como cualquier app, abre sin internet y se actualiza sola cada lunes con precios nuevos; no hay que reemplazar nada.</li>
       </ol>
       <p class="note" style="margin-top:12px">La dirección de la app es <a id="linkOnline" href="https://valenzuelajesuspsico-ui.github.io/costeo-recetas/" target="_blank" rel="noopener">valenzuelajesuspsico-ui.github.io/costeo-recetas</a>. Las búsquedas de tiendas en Google Maps usan tu internet; lo demás funciona sin señal.</p>
@@ -294,6 +304,20 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
     </section>
 
     <section class="card">
+      <div class="hdrrow"><h2>Foto del platillo</h2></div>
+      <p class="note" style="margin:4px 0 10px">Cuando lo prepares, tómale una foto para recordar cómo quedó. Se guarda junto con la receta.</p>
+      <div class="foto-box">
+        <img id="fotoImg" alt="Foto del platillo" hidden>
+        <div class="foto-vacia" id="fotoVacia">Todavía no hay foto de este platillo.</div>
+        <div class="actions">
+          <button class="btn" id="btnFoto">Agregar foto</button>
+          <button class="btn danger quiet" id="btnFotoQuitar" hidden>Quitar foto</button>
+          <input type="file" id="fileFoto" accept="image/*" hidden>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
       <div class="paso-h"><span class="num">3</span><h2>Costo y guardar</h2></div>
       <div class="totales">
         <div class="tot"><span class="lbl">Insumos</span><span class="val" id="tSub">$0.00</span></div>
@@ -335,7 +359,9 @@ const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").trim().toLow
 const STOP=new Set(["de","la","el","los","las","con","y","en","al","a","un","una","del","para","estilo","receta","tipo"]);
 const tokens=s=>norm(s).split(/[^a-z0-9ñ]+/).filter(t=>t.length>2&&!STOP.has(t));
 
-let recetas=[],catalogo={};
+let recetas=[],catalogo={};const fotos={};let fotoActual=null,idb=null;
+function idbPut(k,v){try{idb&&idb.transaction("fotos","readwrite").objectStore("fotos").put(v,k)}catch{}}
+function idbDel(k){try{idb&&idb.transaction("fotos","readwrite").objectStore("fotos").delete(k)}catch{}}
 let actual=vacia();
 let dirty=false;
 
@@ -577,16 +603,16 @@ function resumenTexto(){
 }
 $("btnCopiar").onclick=async()=>{const t=resumenTexto();try{await navigator.clipboard.writeText(t);toast("Resumen copiado.")}catch{const ta=document.createElement("textarea");ta.value=t;ta.style.cssText="position:fixed;left:5vw;top:10vh;width:90vw;height:40vh;z-index:30";document.body.append(ta);ta.select();toast("Selecciona y copia el texto.");ta.onblur=()=>ta.remove()}};
 $("btnCSV").onclick=()=>{const esc=v=>'"'+String(v??"").replace(/"/g,'""')+'"';const rows=[["Ingrediente","Cantidad","Unidad","Precio","Por","Costo","Fuente","Tienda","Dirección"]];for(const r of actual.ingredientes){const c=costo(r);rows.push([r.nombre,r.cantidad,r.unidad,r.precio,r.precioPor,c&&!Number.isNaN(c)?c.toFixed(2):"",r.fuente,r.tienda,r.dir])}rows.push([],["Insumos",$("tSub").textContent],["Imprevistos "+actual.imprevistos+"%",$("tImp").textContent],["Total",$("tTot").textContent],["Por comensal",$("tPor").textContent]);descargar((actual.titulo||"receta").replace(/[^\w\-áéíóúñ ]/gi,"")+".csv","﻿"+rows.map(x=>x.map(esc).join(",")).join("\n"),"text/csv;charset=utf-8")};
-$("btnExportar").onclick=()=>{descargar("costeo-respaldo-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({recetas,catalogo},null,1),"application/json");toast("Respaldo descargado.")};
+$("btnExportar").onclick=()=>{descargar("costeo-respaldo-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({recetas,catalogo,fotos},null,1),"application/json");toast("Respaldo descargado.")};
 $("btnImportar").onclick=()=>$("fileImport").click();
-$("fileImport").onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!Array.isArray(d.recetas))throw 0;const ids=new Set(recetas.map(x=>x.id));let n=0;for(const r of d.recetas)if(!ids.has(r.id)){recetas.push(r);n++}if(d.catalogo&&typeof d.catalogo==="object")for(const k of Object.keys(d.catalogo))catalogo[k]=d.catalogo[k];persistir();persistirCat();renderLista();renderDatalist();toast(`${n} receta(s) restauradas.`)}catch{toast("Ese archivo no es un respaldo válido.")}e.target.value=""};fr.readAsText(f)};
+$("fileImport").onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!Array.isArray(d.recetas))throw 0;const ids=new Set(recetas.map(x=>x.id));let n=0;for(const r of d.recetas)if(!ids.has(r.id)){recetas.push(r);n++}if(d.catalogo&&typeof d.catalogo==="object")for(const k of Object.keys(d.catalogo))catalogo[k]=d.catalogo[k];if(d.fotos&&typeof d.fotos==="object")for(const k of Object.keys(d.fotos)){fotos[k]=d.fotos[k];idbPut(k,d.fotos[k])}persistir();persistirCat();renderLista();renderDatalist();toast(`${n} receta(s) restauradas.`)}catch{toast("Ese archivo no es un respaldo válido.")}e.target.value=""};fr.readAsText(f)};
 
 /* ---------- ayuda, paleta, maridajes ---------- */
 function cerrarPaneles(){for(const id of ["ayudaCard","maridajesCard","tiendasCard","catCard"])$(id).hidden=true}
 $("btnAyuda").onclick=()=>{const h=$("ayudaCard").hidden;cerrarPaneles();$("ayudaCard").hidden=!h;if(!$("ayudaCard").hidden)window.scrollTo({top:0,behavior:"smooth"})};
 $("btnAyudaOk").onclick=()=>{$("ayudaCard").hidden=true;try{localStorage.setItem("costeo.ayudaVista","1")}catch{}};
 (function(){let v=null;try{v=localStorage.getItem("costeo.ayudaVista")}catch{}if(!v)$("ayudaCard").hidden=false})();
-(function(){const sel=$("paleta");let v="mole";try{v=localStorage.getItem("costeo.paleta")||"mole"}catch{}if(!["mole","huerto","pizarra"].includes(v))v="mole";sel.value=v;document.documentElement.dataset.palette=v;sel.onchange=()=>{document.documentElement.dataset.palette=sel.value;try{localStorage.setItem("costeo.paleta",sel.value)}catch{}}})();
+(function(){const sel=$("paleta");let v="mole";try{v=localStorage.getItem("costeo.paleta")||"mole"}catch{}if(!["mole","huerto","pizarra","mantel","sal"].includes(v))v="mole";sel.value=v;document.documentElement.dataset.palette=v;sel.onchange=()=>{document.documentElement.dataset.palette=sel.value;try{localStorage.setItem("costeo.paleta",sel.value)}catch{}}})();
 (function(){
   const M=BASE.MARIDAJES||[],SYN=BASE.SINONIMOS_MX||{};
   const disp=n=>SYN[n]||n;
@@ -597,6 +623,26 @@ $("btnAyudaOk").onclick=()=>{$("ayudaCard").hidden=true;try{localStorage.setItem
   $("btnMaridajes").onclick=()=>{const h=$("maridajesCard").hidden;cerrarPaneles();$("maridajesCard").hidden=!h;if(!h)return;$("maridajesCard").scrollIntoView({behavior:"smooth"});$("mariIn").focus()};
   $("btnMaridajesCerrar").onclick=()=>{$("maridajesCard").hidden=true};
 })();
+
+/* ---------- foto del platillo ---------- */
+function pintarFoto(){const f=fotoActual;$("fotoImg").hidden=!f;if(f)$("fotoImg").src=f;$("fotoVacia").hidden=!!f;$("btnFotoQuitar").hidden=!f;$("btnFoto").textContent=f?"Cambiar foto":"Agregar foto";$("btnFotoQuitar").textContent="Quitar foto"}
+function guardarFoto(){if(!actual.id)return;if(fotoActual){fotos[actual.id]=fotoActual;idbPut(actual.id,fotoActual)}else if(fotos[actual.id]){delete fotos[actual.id];idbDel(actual.id)}}
+function limpiarFotos(){const ids=new Set(recetas.map(r=>r.id));for(const k of Object.keys(fotos))if(!ids.has(k)){delete fotos[k];idbDel(k)}}
+function miniaturas(){for(const b of $("lista").querySelectorAll("[data-open]")){const f=fotos[b.dataset.open];if(!f)continue;b.classList.add("conmini");const im=document.createElement("img");im.className="mini";im.alt="";im.src=f;b.prepend(im)}}
+{const _rl=renderLista;renderLista=function(){_rl();miniaturas()}}
+$("btnFoto").onclick=()=>$("fileFoto").click();
+$("fileFoto").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const url=URL.createObjectURL(f);const im=new Image();
+  im.onload=()=>{const m=1000,s=Math.min(1,m/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);fotoActual=c.toDataURL("image/jpeg",0.72);URL.revokeObjectURL(url);pintarFoto();
+    if(actual.id){guardarFoto();renderLista();toast("Foto guardada.")}else toast("Foto lista. Se guarda cuando toques «Guardar».")};
+  im.onerror=()=>{URL.revokeObjectURL(url);toast("No se pudo abrir esa imagen. Prueba con otra foto.")};im.src=url};
+let confFoto=false;
+$("btnFotoQuitar").onclick=()=>{if(!confFoto){confFoto=true;$("btnFotoQuitar").textContent="¿Quitar la foto? Toca otra vez";setTimeout(()=>{confFoto=false;pintarFoto()},4000);return}confFoto=false;fotoActual=null;guardarFoto();pintarFoto();renderLista();toast("Foto quitada.")};
+$("btnGuardar").addEventListener("click",()=>{if(actual.id&&!dirty){guardarFoto();renderLista()}});
+$("btnBorrar").addEventListener("click",()=>{limpiarFotos();if(!actual.id){fotoActual=null;pintarFoto()}});
+$("btnNueva").addEventListener("click",()=>{fotoActual=null;pintarFoto()});
+$("lista").addEventListener("click",e=>{if(e.target.closest("[data-open]")){fotoActual=fotos[actual.id]||null;pintarFoto()}});
+try{const rq=indexedDB.open("costeo",1);rq.onupgradeneeded=()=>rq.result.createObjectStore("fotos");rq.onsuccess=()=>{idb=rq.result;const st=idb.transaction("fotos").objectStore("fotos");const cur=st.openCursor();cur.onsuccess=()=>{const c=cur.result;if(c){fotos[c.key]=c.value;c.continue()}else{if(actual.id&&!fotoActual){fotoActual=fotos[actual.id]||null;pintarFoto()}renderLista()}}}}catch{}
+pintarFoto();
 
 /* ---------- guía de siguiente paso y barra fija ---------- */
 function guia(){
