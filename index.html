@@ -176,6 +176,25 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
 .recetas button.conmini{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;box-sizing:border-box}
 .recetas .mini{width:44px;height:44px;object-fit:cover;border-radius:6px;grid-row:1/3}
 .recetas button.conmini>span{grid-column:2}
+.cmp{margin:12px 0 0;padding:10px 12px;background:var(--cream);border-radius:8px;font-size:15px}
+.cmp b{font-variant-numeric:tabular-nums}
+#hoja{display:none}
+@media print{
+  body{background:#fff!important;padding:0!important}
+  body>*:not(#hoja){display:none!important}
+  #hoja{display:block;color:#000;font:11pt/1.4 system-ui,sans-serif;padding:0}
+  #hoja h1{font:400 22pt Georgia,serif;margin:0 0 2pt}
+  #hoja .meta{color:#444;margin:0 0 10pt}
+  #hoja img{max-width:60%;max-height:200pt;border-radius:4pt;margin:0 0 10pt}
+  #hoja table{border-collapse:collapse;width:100%;font-size:10pt}
+  #hoja th{text-align:left;border-bottom:1.5pt solid #000;padding:4pt 6pt}
+  #hoja td{border-bottom:.5pt solid #bbb;padding:4pt 6pt}
+  #hoja .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  #hoja tfoot td{border:0;font-weight:600}
+  #hoja tfoot tr.gran td{border-top:1.5pt solid #000;font-size:12pt}
+  #hoja ul{margin:4pt 0 0;padding-left:16pt}
+  #hoja .pie{margin-top:14pt;color:#555;font-size:9pt}
+}
 </style>
 </head>
 <body>
@@ -225,6 +244,8 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
         <li class="paso"><b>Toca «Guardar receta»</b> para que quede en la lista de la izquierda (en el teléfono, en el botón «☰ Recetas guardadas»). Ahí puedes volver a abrirla cuando quieras.</li>
         <li class="paso"><b>Si algo sale mal</b>, no se rompe nada: toca «+ Nueva» y empieza de nuevo. Para quitar un ingrediente toca la ✕. Para borrar una receta hay que tocar «Eliminar» dos veces, así no se borra por accidente.</li>
         <li class="paso"><b>De vez en cuando toca «Respaldar todo»</b> (en el menú de recetas). Se descarga un archivo con todas tus recetas; si cambias de teléfono, lo cargas con «Restaurar un respaldo» y recuperas todo.</li>
+        <li class="paso"><b>Elige dónde vas a comprar</b> en el paso 2. Los precios se calculan para esa tienda, para que no tengas que ir a cuatro lugares. Si quieres saber si te conviene otra, elígela en «Comparar con otra tienda» y verás los dos totales.</li>
+        <li class="paso"><b>Para mandar el costeo</b> a alguien, toca «Compartir como imagen» (sale una hoja con ingredientes, costos y total, lista para WhatsApp) o «Imprimir o guardar PDF».</li>
         <li class="paso"><b>Puedes cambiar los colores</b> en «Estilo», arriba a la derecha: Mole y chile, Huerto y betabel, Pizarra de bistró (fondo oscuro), Mantel blanco o Sal de mar. La página recuerda tu elección.</li>
         <li class="paso"><b>Para tenerla como app en el teléfono</b>: abre la dirección de abajo en Chrome, toca los tres puntos del menú y elige «Instalar aplicación» o «Agregar a pantalla de inicio». Queda un icono como cualquier app, abre sin internet y se actualiza sola cada lunes con precios nuevos; no hay que reemplazar nada.</li>
       </ol>
@@ -285,6 +306,10 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
           <button class="btn quiet" id="btnEscalar">Escalar…</button>
         </div>
       </div>
+      <div class="row" style="margin-top:12px">
+        <div class="field"><label for="tiendaA">¿Dónde vas a comprar?</label><select id="tiendaA"></select></div>
+        <div class="field"><label for="tiendaB">Comparar con otra tienda</label><select id="tiendaB"></select></div>
+      </div>
       <p class="status" id="stPre" style="margin:8px 0 0"></p>
       <div class="row" id="escalarRow" hidden style="margin-top:10px">
         <div class="field sm"><label for="escalaDe">Estas cantidades son para</label><input id="escalaDe" type="number" inputmode="numeric" min="1" step="1"></div>
@@ -325,9 +350,12 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
         <div class="tot big"><span class="lbl">Total estimado</span><span class="val" id="tTot">$0.00</span></div>
         <div class="tot"><span class="lbl">Por comensal</span><span class="val" id="tPor">$0.00</span></div>
       </div>
+      <p id="cmpTot" class="cmp" hidden></p>
       <div class="actions" style="margin-top:14px">
         <button class="btn primary" id="btnGuardar">Guardar receta</button>
         <button class="btn" id="btnDuplicar" hidden>Duplicar</button>
+        <button class="btn olive" id="btnImagen">Compartir como imagen</button>
+        <button class="btn" id="btnPDF">Imprimir o guardar PDF</button>
         <button class="btn" id="btnCopiar">Copiar resumen</button>
         <button class="btn" id="btnCSV">Descargar CSV</button>
         <button class="btn danger quiet" id="btnBorrar" hidden>Eliminar receta</button>
@@ -337,6 +365,7 @@ header select{width:auto;min-height:36px;padding:4px 8px;font-size:14px}
   </main>
 </div>
 
+<div id="hoja"></div>
 <div id="barra"><div class="in">
   <p id="guia"></p>
   <div class="tt"><b id="bTot">$0.00</b><span id="bPor">por persona $0.00</span></div>
@@ -385,17 +414,17 @@ function persistir(){try{localStorage.setItem(KEY_R,JSON.stringify(recetas))}cat
 function persistirCat(){try{localStorage.setItem(KEY_C,JSON.stringify(catalogo))}catch{}}
 
 /* ---------- referencia de precios ---------- */
-const REF=new Map();for(const [n,p,u,t] of BASE.PRECIOS)REF.set(norm(n),{nombre:n,precio:p,precioPor:u,tienda:t});
+const REF=new Map();for(const [n,p,u,t] of BASE.PRECIOS)REF.set(norm(n),{nombre:n,precio:p,precioPor:u,tienda:t,g:t});
 function tiendaInfo(key){const t=BASE.TIENDAS[key];return t?{tienda:t.nombre,dir:t.dir}:{tienda:key||"",dir:""}}
-function buscarPrecio(nombre){
+function buscarPrecio(nombre,sinCat){
   const k=norm(nombre);if(!k)return null;
-  if(catalogo[k])return{...catalogo[k],fuente:"catálogo",ref:false};
+  if(!sinCat&&catalogo[k])return{...catalogo[k],fuente:"catálogo",ref:false};
   if(REF.has(k))return{...REF.get(k),...tiendaInfo(REF.get(k).tienda),fuente:"referencia"};
   let best=null,bs=0;
   for(const [rk,v] of REF){let s=0;if(rk.startsWith(k)||k.startsWith(rk))s=Math.min(rk.length,k.length)/Math.max(rk.length,k.length)+0.5;else{const tk=tokens(k),tr=tokens(rk);const inter=tk.filter(t=>tr.includes(t)).length;if(inter)s=inter/Math.max(tk.length,tr.length)}if(s>bs){bs=s;best=v}}
   if(best&&bs>=0.5)return{...best,...tiendaInfo(best.tienda),fuente:"referencia"};
-  for(const ck of Object.keys(catalogo))if(ck.includes(k)||k.includes(ck))return{...catalogo[ck],fuente:"catálogo"};
-  for(const [kw,p,u,t] of BASE.CATEGORIAS)if(k.includes(kw))return{nombre,precio:p,precioPor:u,...tiendaInfo(t),fuente:"referencia",aprox:true};
+  if(!sinCat)for(const ck of Object.keys(catalogo))if(ck.includes(k)||k.includes(ck))return{...catalogo[ck],fuente:"catálogo"};
+  for(const [kw,p,u,t] of BASE.CATEGORIAS)if(k.includes(kw))return{nombre,precio:p,precioPor:u,...tiendaInfo(t),g:t,fuente:"referencia",aprox:true};
   return null;
 }
 function catPoner(nombre,d){const k=norm(nombre);if(!k||!(Number(d.precio)>=0))return;catalogo[k]={nombre:String(nombre).trim(),precio:Number(d.precio),precioPor:PRECIO_POR.includes(d.precioPor)?d.precioPor:"kg",tienda:d.tienda||"",dir:d.dir||""}}
@@ -431,12 +460,12 @@ function pintarCosto(card,r){
   if(c===null){b.className="na";b.textContent="Falta cantidad o precio"}else if(Number.isNaN(c)){b.className="na";b.textContent="La unidad no coincide con el precio"}else b.textContent=mxn(c);
   el.append(b);
   if(r.fuente){const s=document.createElement("span");s.className="badge "+r.fuente;s.textContent=ETIQ[r.fuente]||r.fuente;el.append(s)}
-  const rs=card.querySelector(".resumen");if(rs){rs.querySelector(".rn").textContent=r.nombre||"Ingrediente nuevo";rs.querySelector(".rq").textContent=(r.cantidad!==""?r.cantidad+" "+r.unidad:"sin cantidad")+(r.tienda?" · "+r.tienda:"");const rc=rs.querySelector(".rc");const ok=c!==null&&!Number.isNaN(c);rc.textContent=ok?mxn(c):(c===null?"falta precio":"revisar unidad");rc.classList.toggle("falta",!ok)}
+  const rs=card.querySelector(".resumen");if(rs){rs.querySelector(".rn").textContent=r.nombre||"Ingrediente nuevo";rs.querySelector(".rq").textContent=rqTexto(r);const rc=rs.querySelector(".rc");const ok=c!==null&&!Number.isNaN(c);rc.textContent=ok?mxn(c):(c===null?"falta precio":"revisar unidad");rc.classList.toggle("falta",!ok)}
 }
 const ETIQ={referencia:"precio estimado",manual:"tu precio","catálogo":"tu precio guardado",recetario:"del recetario"};
 const abiertos=new Set();
 function pintarTienda(card,r){
-  const rq=card.querySelector(".resumen .rq");if(rq)rq.textContent=(r.cantidad!==""?r.cantidad+" "+r.unidad:"sin cantidad")+(r.tienda?" · "+r.tienda:"");
+  const rq=card.querySelector(".resumen .rq");if(rq)rq.textContent=rqTexto(r);
   const el=card.querySelector(".tienda");el.textContent="";
   const inp=document.createElement("input");inp.dataset.k="tienda";inp.placeholder="Dónde comprar";inp.value=r.tienda;inp.setAttribute("list","dlTiendas");el.append(inp);
   if(r.tienda){const row=document.createElement("span");if(r.dir)row.textContent=r.dir+" · ";const a=document.createElement("a");a.href=mapsLink(r.tienda);a.target="_blank";a.rel="noopener";a.textContent="Maps";row.append(a);el.append(row)}
@@ -462,7 +491,7 @@ function renderTabla(){
 function renderTotales(){
   let sub=0;for(const r of actual.ingredientes){const c=costo(r);if(c!==null&&!Number.isNaN(c))sub+=c}
   const imp=sub*(actual.imprevistos||0)/100,tot=sub+imp,n=actual.porciones||1;
-  $("tSub").textContent=mxn(sub);$("tImp").textContent=mxn(imp);$("tTot").textContent=mxn(tot);$("tPor").textContent=mxn(tot/n);
+  $("tSub").textContent=mxn(sub);$("tImp").textContent=mxn(imp);$("tTot").textContent=mxn(tot);$("tPor").textContent=mxn(tot/n);pintarComparativa(tot);
 }
 function renderForm(){
   abiertos.clear();
@@ -495,7 +524,7 @@ $("ings").addEventListener("change",e=>{
   const k=e.target.dataset.k;const card=e.target.closest(".ing");if(!card)return;const r=actual.ingredientes[+card.dataset.i];
   if(k==="tienda"){pintarTienda(card,r);return}
   if(k!=="nombre"||r.precio!==""&&r.precio!==null)return;
-  aplicarPrecio(r,buscarPrecio(r.nombre));
+  aplicarPrecio(r,precioEn(r.nombre,tiendaA));
   card.querySelector('[data-k="precio"]').value=r.precio;card.querySelector('[data-k="precioPor"]').value=r.precioPor;card.querySelector('[data-k="unidad"]').value=r.unidad;
   pintarCosto(card,r);pintarTienda(card,r);renderTotales();
 });
@@ -518,7 +547,7 @@ $("btnPrecios").onclick=()=>{
   const filas=actual.ingredientes.filter(r=>r.nombre.trim()&&r.fuente!=="manual");
   if(!actual.ingredientes.some(r=>r.nombre.trim())){$("stPre").className="status err";$("stPre").textContent="Agrega ingredientes primero.";return}
   let n=0,sin=[];
-  for(const r of filas){const p=buscarPrecio(r.nombre);if(aplicarPrecio(r,p))n++;else sin.push(r.nombre)}
+  for(const r of filas){const p=precioEn(r.nombre,tiendaA);if(p){r.tienda="";r.dir=""}if(aplicarPrecio(r,p))n++;else sin.push(r.nombre)}
   dirty=true;renderTabla();
   $("stPre").className="status";
   $("stPre").textContent=(n?`Se estimaron ${n} precio(s) de referencia. `:"")+(sin.length?`Sin referencia: ${sin.join(", ")}; escribe esos precios a mano.`:"")+(filas.length<actual.ingredientes.length?" Los precios manuales no se tocaron.":"");
@@ -623,6 +652,99 @@ $("btnAyudaOk").onclick=()=>{$("ayudaCard").hidden=true;try{localStorage.setItem
   $("btnMaridajes").onclick=()=>{const h=$("maridajesCard").hidden;cerrarPaneles();$("maridajesCard").hidden=!h;if(!h)return;$("maridajesCard").scrollIntoView({behavior:"smooth"});$("mariIn").focus()};
   $("btnMaridajesCerrar").onclick=()=>{$("maridajesCard").hidden=true};
 })();
+
+/* ---------- tiendas: comprar en una, comparar con otra ---------- */
+const UNA=["calimax","soriana","walmart","costco","smart","mercado"];
+const FACT={
+ calimax:{mercado:1.18,calimax:1,soriana:1.05,walmart:1.06,costco:1.15,smart:1.08,carniceria:1.08,pescaderia:1.12,tortilleria:1.1,panaderia:1.05},
+ soriana:{mercado:1.2,calimax:1.02,soriana:1,walmart:1.03,costco:1.14,smart:1.06,carniceria:1.07,pescaderia:1.1,tortilleria:1.1,panaderia:1.05},
+ walmart:{mercado:1.15,calimax:.98,soriana:1,walmart:1,costco:1.12,smart:1.04,carniceria:1.05,pescaderia:1.1,tortilleria:1.1,panaderia:1.05},
+ costco:{mercado:1.1,calimax:.93,soriana:.95,walmart:.92,costco:1,smart:.97,carniceria:.98,pescaderia:1,tortilleria:0,panaderia:1},
+ smart:{mercado:1.1,calimax:.98,soriana:1,walmart:.97,costco:1.04,smart:1,carniceria:1.02,pescaderia:1.08,tortilleria:1.1,panaderia:1.05},
+ mercado:{mercado:1,calimax:1.08,soriana:0,walmart:1.1,costco:1.1,smart:1.1,carniceria:1,pescaderia:1.05,tortilleria:1,panaderia:1}};
+let tiendaA="calimax",tiendaB="";
+try{tiendaA=localStorage.getItem("costeo.tiendaA")||"calimax";tiendaB=localStorage.getItem("costeo.tiendaB")||""}catch{}
+if(tiendaA!=="barato"&&!UNA.includes(tiendaA))tiendaA="calimax";if(tiendaB&&!UNA.includes(tiendaB))tiendaB="";
+const nomT=k=>k==="barato"?"varias tiendas":(BASE.TIENDAS[k]?BASE.TIENDAS[k].nombre:k);
+function precioEn(nombre,key,sinCat){
+  if(!sinCat){const c=catalogo[norm(nombre)];if(c)return{...c,fuente:"catálogo"}}
+  const r=buscarPrecio(nombre,true);if(!r)return null;
+  if(key==="barato"||!FACT[key])return r;
+  const ov=BASE.PRECIOS_TIENDA&&BASE.PRECIOS_TIENDA[key]&&BASE.PRECIOS_TIENDA[key][norm(r.nombre)];
+  const f=FACT[key][r.g];
+  if(ov==null&&!f)return{...r,nd:true};
+  let pr=ov!=null?ov:r.precio*f;pr=pr<10?Math.round(pr*10)/10:Math.round(pr);
+  return{nombre:r.nombre,precio:pr,precioPor:r.precioPor,tienda:BASE.TIENDAS[key].nombre,dir:BASE.TIENDAS[key].dir,fuente:"referencia",g:r.g};
+}
+function costoB(r){
+  if(!tiendaB||!r.nombre.trim())return null;const q=parseFloat(r.cantidad);if(!(q>=0))return null;
+  const p=precioEn(r.nombre,tiendaB,true);if(!p)return null;const f=FACTOR[r.unidad];if(!f||f[0]!==p.precioPor)return null;return q*f[1]*p.precio;
+}
+function rqTexto(r){const b=costoB(r);return (r.cantidad!==""?r.cantidad+" "+r.unidad:"sin cantidad")+(r.tienda?" · "+r.tienda:"")+(b!=null?" · en "+nomT(tiendaB)+" "+mxn(b):"")}
+function totalB(){if(!tiendaB)return null;let s=0,falt=0;for(const r of actual.ingredientes){if(!r.nombre.trim())continue;const b=costoB(r);if(b==null){const a=costo(r);if(a!=null&&!Number.isNaN(a))s+=a;falt++}else s+=b}return{tot:s*(1+(actual.imprevistos||0)/100),falt}}
+function pintarComparativa(totA){
+  const el=$("cmpTot"),b=totalB();if(!b||!actual.ingredientes.some(r=>r.nombre.trim())){el.hidden=true;return}
+  const d=b.tot-totA;el.hidden=false;el.textContent="";
+  const t=document.createElement("span");t.innerHTML="En <b></b> saldría en <b></b>: ";t.children[0].textContent=nomT(tiendaB);t.children[1].textContent=mxn(b.tot);el.append(t);
+  el.append(Math.abs(d)<1?"prácticamente lo mismo.":(d>0?mxn(d)+" más caro que en "+nomT(tiendaA)+".":mxn(-d)+" más barato que en "+nomT(tiendaA)+"."));
+}
+(function(){
+  const a=$("tiendaA"),b=$("tiendaB");
+  for(const k of UNA){const o=document.createElement("option");o.value=k;o.textContent=nomT(k);a.append(o);b.append(o.cloneNode(true))}
+  const o=document.createElement("option");o.value="barato";o.textContent="Lo más barato de cada cosa (varias tiendas)";a.append(o);
+  const z=document.createElement("option");z.value="";z.textContent="No comparar";b.prepend(z);
+  a.value=tiendaA;b.value=tiendaB;
+  a.onchange=()=>{tiendaA=a.value;try{localStorage.setItem("costeo.tiendaA",tiendaA)}catch{}if(actual.ingredientes.some(r=>r.nombre.trim()&&r.precio!==""))$("btnPrecios").click();else renderTabla()};
+  b.onchange=()=>{tiendaB=b.value;try{localStorage.setItem("costeo.tiendaB",tiendaB)}catch{}renderTabla()};
+})();
+
+/* ---------- hoja para compartir: imagen y PDF ---------- */
+function datosHoja(){
+  const filas=actual.ingredientes.filter(r=>r.nombre.trim()).map(r=>{const a=costo(r);return{n:r.nombre,q:(r.cantidad!==""?r.cantidad+" "+r.unidad:""),pu:r.precio!==""?mxn(r.precio)+"/"+r.precioPor:"",a:(a!=null&&!Number.isNaN(a))?a:null,b:costoB(r),t:r.tienda||""}});
+  const sub=filas.reduce((s,f)=>s+(f.a||0),0),imp=sub*(actual.imprevistos||0)/100,tot=sub+imp,n=actual.porciones||1,B=totalB();
+  return{titulo:actual.titulo||"Receta",meta:`${n} comensales · porción ${actual.tipo} · ${new Date().toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"})}`,filas,sub,imp,tot,por:tot/n,n,B,A:nomT(tiendaA),Bn:tiendaB?nomT(tiendaB):""};
+}
+$("btnPDF").onclick=()=>{
+  const d=datosHoja();if(!d.filas.length){toast("Primero agrega ingredientes.");return}
+  const h=$("hoja");h.textContent="";const E=(t,txt,c)=>{const e=document.createElement(t);if(txt!=null)e.textContent=txt;if(c)e.className=c;return e};
+  h.append(E("h1",d.titulo),E("p",d.meta+" · precios de "+d.A,"meta"));
+  if(fotoActual){const im=E("img");im.src=fotoActual;h.append(im)}
+  const tb=E("table"),th=E("thead"),tr=E("tr");for(const [x,c] of [["Ingrediente"],["Cantidad","n"],["Precio","n"],[d.A,"n"],...(d.Bn?[[d.Bn,"n"]]:[])])tr.append(E("th",x,c));th.append(tr);tb.append(th);
+  const bd=E("tbody");for(const f of d.filas){const r=E("tr");r.append(E("td",f.n),E("td",f.q,"n"),E("td",f.pu,"n"),E("td",f.a!=null?mxn(f.a):"—","n"));if(d.Bn)r.append(E("td",f.b!=null?mxn(f.b):"—","n"));bd.append(r)}tb.append(bd);
+  const ft=E("tfoot");const fila=(l,a,b,c)=>{const r=E("tr",null,c);const td=E("td",l);td.colSpan=3;r.append(td,E("td",a,"n"));if(d.Bn)r.append(E("td",b,"n"));ft.append(r)};
+  fila("Insumos",mxn(d.sub),d.B?mxn(d.B.tot/(1+(actual.imprevistos||0)/100)):"");fila("Imprevistos "+(actual.imprevistos||0)+" %",mxn(d.imp),"");fila("Total",mxn(d.tot),d.B?mxn(d.B.tot):"","gran");fila("Por comensal",mxn(d.por),d.B?mxn(d.B.tot/d.n):"");tb.append(ft);h.append(tb);
+  if((actual.consejos||[]).length){h.append(E("p","Recuerda:","meta"));const ul=E("ul");for(const c of actual.consejos)ul.append(E("li",c));h.append(ul)}
+  h.append(E("p",(actual.fuente?"Fuente de la receta: "+actual.fuente+". ":"")+"Precios de referencia para Tijuana, B.C. ("+(BASE.FECHA||"")+"); pueden variar. Hecho con Costeo de Recetas.","pie"));
+  window.print();
+};
+$("btnImagen").onclick=async()=>{
+  const d=datosHoja();if(!d.filas.length){toast("Primero agrega ingredientes.");return}
+  const cs=getComputedStyle(document.documentElement),col=v=>cs.getPropertyValue(v).trim()||"#333";
+  const W=1080,M=56,rowH=58,cmp=!!d.Bn;let foto=null;
+  if(fotoActual){foto=await new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src=fotoActual})}
+  const fh=foto?Math.min(520,Math.round((W-2*M)*foto.height/foto.width)):0;
+  const H=250+(foto?fh+30:0)+70+d.filas.length*rowH+(cmp?330:290)+90;
+  const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  const F=(s,w)=>`${w||400} ${s}px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif`;
+  const fit=(t,max)=>{if(x.measureText(t).width<=max)return t;while(t.length>3&&x.measureText(t+"…").width>max)t=t.slice(0,-1);return t+"…"};
+  x.fillStyle="#ffffff";x.fillRect(0,0,W,H);x.fillStyle=col("--olive");x.fillRect(0,0,W,14);
+  x.textBaseline="alphabetic";x.fillStyle=col("--accent");x.font=F(24,700);x.fillText("COSTEO DE RECETA",M,78);
+  x.fillStyle="#1d1d1b";x.font=`400 54px Georgia,"Times New Roman",serif`;x.fillText(fit(d.titulo,W-2*M),M,146);
+  x.fillStyle="#666";x.font=F(28);x.fillText(fit(d.meta,W-2*M),M,196);
+  let y=230;
+  if(foto){const w=W-2*M,sh=foto.width*fh/w,sy=Math.max(0,(foto.height-sh)/2);x.drawImage(foto,0,sy,foto.width,Math.min(sh,foto.height),M,y,w,fh);y+=fh+30}
+  const cA=cmp?W-M-190:W-M,cB=W-M,cQ=cmp?W-M-390:W-M-200,nameW=cQ-M-170;
+  x.font=F(22,700);x.fillStyle="#666";x.textAlign="left";x.fillText("INGREDIENTE",M,y+36);x.textAlign="right";x.fillText("CANTIDAD",cQ,y+36);x.fillText(fit(d.A.toUpperCase(),180),cA,y+36);if(cmp)x.fillText(fit(d.Bn.toUpperCase(),180),cB,y+36);
+  y+=52;x.fillStyle="#1d1d1b";x.fillRect(M,y,W-2*M,3);y+=4;
+  for(const f of d.filas){x.textAlign="left";x.fillStyle="#1d1d1b";x.font=F(28,600);x.fillText(fit(f.n,nameW),M,y+38);x.textAlign="right";x.font=F(26);x.fillStyle="#555";x.fillText(f.q,cQ,y+38);x.fillStyle="#1d1d1b";x.font=F(28,600);x.fillText(f.a!=null?mxn(f.a):"—",cA,y+38);if(cmp){x.font=F(28);x.fillStyle="#555";x.fillText(f.b!=null?mxn(f.b):"—",cB,y+38)}y+=rowH;x.fillStyle="#e2e2dc";x.fillRect(M,y-2,W-2*M,2)}
+  y+=20;const linea=(l,a,b,big)=>{x.textAlign="left";x.fillStyle=big?"#1d1d1b":"#555";x.font=F(big?34:28,big?700:400);x.fillText(l,M,y+40);x.textAlign="right";x.fillStyle=big?col("--accent"):"#1d1d1b";x.font=F(big?40:28,big?700:600);x.fillText(a,cA,y+40);if(cmp&&b){x.fillStyle="#555";x.font=F(big?34:28,big?700:400);x.fillText(b,cB,y+40)}y+=big?64:50};
+  linea("Insumos",mxn(d.sub),d.B?mxn(d.B.tot/(1+(actual.imprevistos||0)/100)):"");linea("Imprevistos "+(actual.imprevistos||0)+" %",mxn(d.imp),"");linea("Total",mxn(d.tot),d.B?mxn(d.B.tot):"",true);linea("Por comensal",mxn(d.por),d.B?mxn(d.B.tot/d.n):"");
+  if(cmp&&d.B){y+=14;const df=d.B.tot-d.tot;x.fillStyle=col("--cream");x.fillRect(M,y,W-2*M,64);x.textAlign="left";x.fillStyle="#1d1d1b";x.font=F(26,600);x.fillText(fit(Math.abs(df)<1?"Cuesta prácticamente lo mismo en las dos tiendas.":(df>0?`Comprar en ${d.A} ahorra ${mxn(df)}.`:`Comprar en ${d.Bn} ahorra ${mxn(-df)}.`),W-2*M-40),M+20,y+42);y+=64}
+  x.textAlign="left";x.fillStyle="#777";x.font=F(22);x.fillText(fit("Precios de referencia para Tijuana, B.C. ("+(BASE.FECHA||"")+"); pueden variar.",W-2*M),M,H-40);
+  c.toBlob(async blob=>{const nombre=(d.titulo.replace(/[^\w\-áéíóúñ ]/gi,"").trim()||"costeo")+".png";const file=new File([blob],nombre,{type:"image/png"});
+    try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:d.titulo});return}}catch(e){if(e&&e.name==="AbortError")return}
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nombre;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);toast("Imagen descargada.")},"image/png");
+};
 
 /* ---------- foto del platillo ---------- */
 function pintarFoto(){const f=fotoActual;$("fotoImg").hidden=!f;if(f)$("fotoImg").src=f;$("fotoVacia").hidden=!!f;$("btnFotoQuitar").hidden=!f;$("btnFoto").textContent=f?"Cambiar foto":"Agregar foto";$("btnFotoQuitar").textContent="Quitar foto"}
