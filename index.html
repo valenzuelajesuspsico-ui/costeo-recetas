@@ -909,8 +909,11 @@ function pintarIdeas(){
   for(const [re,s] of A_SABOR)if(re.test(k)&&M.some(x=>x[0]===s||x[1]===s)){sab=s;break}
   if(!sab){const todos=[...new Set(M.flatMap(x=>[x[0],x[1]]))];sab=todos.find(s=>tokens(k).includes(norm(s)))||null}
   if(sab){const c=grupo((SYN[sab]||sab)+" combina bien con (Segnit, «La enciclopedia de los sabores»)");const pares=M.filter(x=>x[0]===sab||x[1]===sab).map(x=>[x[0]===sab?x[1]:x[0],x[2]]).slice(0,10);for(const [o,pg] of pares){const s=E("span",(SYN[o]||o)+" ","chip estatico");s.append(E("small","p. "+pg));c.append(s)}}
+  // 3b) sitios de confianza para cocina tradicional mexicana
+  {const c=grupo("Receta tradicional en sitios de confianza (usa tu wifi o tus datos)");const g=s=>"https://www.google.com/search?q="+encodeURIComponent("receta "+t+" site:"+s);
+   for(const [lbl,s] of [["Larousse Cocina","laroussecocina.mx"],["México Desconocido","mexicodesconocido.com.mx"],["Gobierno de México (cultura y cocina tradicional)","gob.mx"],["UNAM","unam.mx"]]){const a=E("a",lbl,"chip");a.href=g(s);a.target="_blank";a.rel="noopener";c.append(a)}}
   // 4) buscar en internet
-  const c=grupo("Buscar en internet (usa tu wifi o tus datos)");const q=encodeURIComponent("receta "+t);
+  const c=grupo("Búsqueda general");const q=encodeURIComponent("receta "+t);
   for(const [lbl,url] of [["Ver videos en YouTube","https://www.youtube.com/results?search_query="+q],["Buscar recetas en Google","https://www.google.com/search?q="+q],["Ver fotos de emplatado","https://www.google.com/search?tbm=isch&q="+encodeURIComponent(t+" emplatado")]]){const a=E("a",lbl,"chip");a.href=url;a.target="_blank";a.rel="noopener";c.append(a)}
   box.hidden=true;$("btnIdeas").hidden=false;$("btnIdeas").textContent="Ver otras ideas para este platillo";
 }
