@@ -1,7 +1,7 @@
 // Service worker: guarda la app para usarla sin internet.
 // Con internet siempre carga primero la versión más nueva de la página; sin internet (o con señal muy lenta) usa la guardada.
 // Este archivo lo genera fuente/build.js; no lo edites a mano.
-const CACHE="costeo-25e7f5e398";
+const CACHE="costeo-a95a45ea5f";
 const FILES=["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:"reload"})))).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

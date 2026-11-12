@@ -51,3 +51,5 @@ module.exports.PRECIOS.push(
 ["Tlayuda",12,"pza","mercado"],["Asiento de manteca",120,"kg","mercado"],["Espinazo de cerdo",110,"kg","carniceria"],["Chicharrón",280,"kg","carniceria"],["Cazón",170,"kg","pescaderia"],
 ["Mejorana",400,"kg","mercado"],["Rábano con hojas (manojo)",18,"pza","mercado"]
 );
+// Bebidas tradicionales
+{const B=require("./bebidas.js");module.exports.RECETAS.push(...B.RECETAS);module.exports.PRECIOS.push(...B.PRECIOS)}
