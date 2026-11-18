@@ -1,5 +1,7 @@
 {
  "FECHA": "noviembre de 2026",
- "PRECIOS": {},
+ "PRECIOS": {
+  "Cebolla blanca": 58
+ },
  "PRECIOS_TIENDA": {}
 }
