@@ -53,3 +53,10 @@ module.exports.PRECIOS.push(
 );
 // Bebidas tradicionales
 {const B=require("./bebidas.js");module.exports.RECETAS.push(...B.RECETAS);module.exports.PRECIOS.push(...B.PRECIOS)}
+// Recetas de diario, básicas e intermedias (para «¿Qué cocinar hoy?»)
+module.exports.RECETAS.push(...require("./diario_a.js"),...require("./diario_b.js"));
+module.exports.PRECIOS.push(
+["Verdolagas",45,"kg","mercado"],["Setas",160,"kg","mercado"],["Haba seca pelada",95,"kg","mercado"],["Mojarra entera",95,"kg","pescaderia"],
+["Cecina enchilada",240,"kg","carniceria"],["Chile chilaca",70,"kg","mercado"],["Cátsup",55,"kg","walmart"],["Galletas saladas",95,"kg","walmart"],
+["Vinagre de vino tinto",110,"L","walmart"],["Eneldo",28,"pza","calimax"]
+);

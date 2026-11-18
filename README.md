@@ -12,6 +12,10 @@ App: https://valenzuelajesuspsico-ui.github.io/costeo-recetas/
 - `fuente/`: los archivos de trabajo de donde sale la app.
   - `plantilla.html`: diseño y programa de la app.
   - `base.js`, `libro/`, `seed/`: recetas, consejos, tiendas y precios base.
+    - `libro/diario_a.js`, `libro/diario_b.js`: recetas de diario, básicas e intermedias.
+    - `libro/ripert_pasos.js`: las 25 recetas de verduras más sencillas, revisadas a mano.
+    - `libro/clasif.js`: nivel, tiempo, tipo de alimento y momento del día de cada receta, para «¿Qué cocinar hoy?». Solo se sugieren las recetas clasificadas.
+    - `libro/descripciones.js`: descripciones que explican de qué trata cada platillo.
   - `precios.json`: precios actualizados cada semana (mandan sobre los precios base).
   - `logo/`: logo que aparece en la hoja compartida.
   - `respaldo/index.html`: portada de la copia de respaldo.

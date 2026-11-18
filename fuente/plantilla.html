@@ -262,7 +262,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
   body[data-p="inicio"] #inicio{display:flex;flex-direction:column;gap:10px}
   body[data-p="recetas"] aside{display:flex}
   body[data-p="recetas"] aside .panel{display:flex}
-  body[data-p="receta"] main>section[data-p="receta"],body[data-p="ingredientes"] main>section[data-p="ingredientes"],body[data-p="preparacion"] main>section[data-p="preparacion"],body[data-p="costo"] main>section[data-p="costo"],body[data-p="sabores"] main>section[data-p="sabores"],body[data-p="tiendas"] main>section[data-p="tiendas"],body[data-p="precios"] main>section[data-p="precios"],body[data-p="ayuda"] main>section[data-p="ayuda"]{display:block}
+  body[data-p="receta"] main>section[data-p="receta"],body[data-p="ingredientes"] main>section[data-p="ingredientes"],body[data-p="preparacion"] main>section[data-p="preparacion"],body[data-p="costo"] main>section[data-p="costo"],body[data-p="sabores"] main>section[data-p="sabores"],body[data-p="tiendas"] main>section[data-p="tiendas"],body[data-p="precios"] main>section[data-p="precios"],body[data-p="ayuda"] main>section[data-p="ayuda"],body[data-p="hoy"] main>section[data-p="hoy"]{display:block}
   #barra{display:none}
   body.enflujo #barra{display:block}
   #barra .in{grid-template-columns:auto minmax(0,1fr) auto}
@@ -281,8 +281,32 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
   .tile span{font-size:14px;color:var(--muted)}
   .tile.principal{background:var(--accent);border-color:var(--accent)}
   .tile.principal b,.tile.principal span{color:var(--accent-fg)}
+  .tile.hoy{border:2px solid var(--accent)}
+  #btnHoy{display:none}
   .tile:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 }
+/* ¿Qué cocinar hoy? */
+.hoy-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:12px 0}
+.hoy-g button{all:unset;box-sizing:border-box;display:flex;align-items:center;min-height:56px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-weight:600;line-height:1.25;cursor:pointer}
+.hoy-g button:hover,.hoy-idea:hover{border-color:var(--accent)}
+.hoy-g button:focus-visible,.hoy-idea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.hoy-mo{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.hoy-mo button{border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--bg);cursor:pointer;font-size:15px;color:var(--fg);min-height:40px}
+.hoy-mo button[aria-pressed="true"]{background:var(--olive);color:var(--olive-fg,#fff);border-color:var(--olive)}
+.hoy-casa{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px}
+.hoy-casa .btn{min-width:44px;padding:0 10px;font-size:20px;line-height:1}
+.hoy-casa b{min-width:1.6em;text-align:center;font-size:18px;font-variant-numeric:tabular-nums}
+.hoy-lista{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.hoy-idea{all:unset;box-sizing:border-box;width:100%;display:flex;flex-direction:column;gap:5px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer}
+.hoy-idea .niv{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.hoy-idea .n1{color:var(--ok)}.hoy-idea .n2{color:var(--warn)}.hoy-idea .n3{color:var(--accent)}
+.hoy-idea .cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.hoy-idea .nom{font-family:var(--display);font-size:19px;line-height:1.25;min-width:0}
+.hoy-idea .pr{font-family:var(--display);font-size:18px;color:var(--accent);white-space:nowrap;text-align:right;line-height:1.25}
+.hoy-idea .pp{display:block;font-family:var(--body);font-size:11px;color:var(--muted);line-height:1.2}
+.hoy-idea .de{font-size:14.5px;line-height:1.45}
+.hoy-idea .me{font-size:13px;color:var(--muted)}
+#hoyRes .actions .btn{flex:1 1 140px;min-height:48px}
 .lnks{display:flex;flex-wrap:wrap;gap:8px}
 .lnk{border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--bg);font-size:15px;color:var(--fg);text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
 .lnk:hover{border-color:var(--accent)}
@@ -293,6 +317,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
   <h1>Costeo de Recetas</h1>
   <span class="sub">Precios de referencia para Tijuana, B.C. (<span id="fechaRef2"></span>) · pesos mexicanos · funciona sin internet</span>
   <div class="tools">
+    <button class="btn" id="btnHoy">¿Qué cocinar hoy?</button>
     <button class="btn quiet" id="btnAyuda">? Ayuda</button>
     <label class="sub" for="paleta">Estilo</label>
     <select id="paleta"><option value="mole">Mole y chile</option><option value="huerto">Huerto y betabel</option><option value="pizarra">Pizarra de bistró</option><option value="mantel">Mantel blanco</option><option value="sal">Sal de mar</option></select>
@@ -307,6 +332,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
 <div id="topbar"><button class="btn quiet" id="tbInicio">‹ Inicio</button><b id="tbTit"></b><span id="tbPaso"></span></div>
 <div id="inicio">
   <p class="hola">¿Qué quieres hacer?</p>
+  <button class="tile hoy" id="inHoy"><b>¿Qué cocinar hoy?</b><span>Dime qué tienes y te doy 4 ideas</span></button>
   <button class="tile principal" id="inNueva"><b>Costear una receta nueva</b><span>Escribe el platillo y te sugiero la receta</span></button>
   <button class="tile" id="inSeguir" hidden><b>Seguir con la receta abierta</b><span id="inSeguirT"></span></button>
   <button class="tile" id="inRecetas"><b>Mis recetas</b><span id="inRecetasT">Las que has guardado, con sus fotos</span></button>
@@ -341,6 +367,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
         <li class="paso"><b>Escribe qué vas a preparar</b> en el primer cuadro (por ejemplo «crema de calabaza» o «buñuelos») y cuántas personas van a comer. Elige si cada persona come una porción completa o solo una probadita (degustación). Si después cambias el número de personas o el tipo de porción, las cantidades se ajustan solas.</li>
         <li class="paso"><b>Toca «Sugerir receta»</b>. Aparecen hasta tres opciones parecidas, con el libro de donde salen. Toca «Usar esta» en la que te guste. Si no aparece nada, baja a «Biblioteca de recetas» (puedes elegir una región o buscar por platillo, ingrediente o estado), o toca «Escribir a mano» y pon los ingredientes tú misma.</li>
         <li class="paso"><b>Mira las «Otras ideas»</b> que salen debajo de las sugerencias: variaciones del platillo (por ejemplo «con nopales»; al tocarla se agrega el ingrediente), recetas parecidas de los libros, sabores que combinan y enlaces para buscar videos o recetas en internet.</li>
+        <li class="paso"><b>Si no sabes qué cocinar</b>, toca «¿Qué cocinar hoy?». Elige lo que tengas (pollo, verduras, huevo…) o escribe un ingrediente, y aparecen 4 ideas, de la más sencilla a la más elaborada. Cada una dice de qué trata, cuánto tarda y cuánto cuesta por persona. Si quieres, elige si es para desayuno, comida o cena ligera. Toca la que te guste y se abre con sus ingredientes, precios y pasos; «Otras 4 ideas» te da más opciones.</li>
         <li class="paso"><b>Toca «Estimar precios»</b>. La página pone un precio aproximado a cada ingrediente y en qué tienda conviene comprarlo. Son precios de referencia: si sabes que algo cuesta distinto, escribe el precio real en su cuadro y la página lo recordará para la próxima vez.</li>
         <li class="paso"><b>Revisa el total</b> al final: lo que cuestan los ingredientes, un 10 % extra para imprevistos y cuánto sale por persona.</li>
         <li class="paso"><b>Toca «Guardar receta»</b> para que quede en la lista de la izquierda (en el teléfono, en el botón «☰ Recetas guardadas»). Ahí puedes volver a abrirla cuando quieras.</li>
@@ -352,6 +379,28 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
         <li class="paso"><b>Para tenerla como app en el teléfono</b>: abre la dirección de abajo en Chrome, toca los tres puntos del menú y elige «Instalar aplicación» o «Agregar a pantalla de inicio». Queda un icono como cualquier app, abre sin internet y se actualiza sola cada lunes con precios nuevos; no hay que reemplazar nada.</li>
       </ol>
       <p class="note" style="margin-top:12px">La dirección de la app es <a id="linkOnline" href="https://valenzuelajesuspsico-ui.github.io/costeo-recetas/" target="_blank" rel="noopener">valenzuelajesuspsico-ui.github.io/costeo-recetas</a>. Las búsquedas de tiendas en Google Maps usan tu internet; lo demás funciona sin señal.</p>
+    </section>
+
+    <section class="card" id="hoyCard" hidden>
+      <div class="hdrrow"><h2 id="hoyTit">¿Qué cocinar hoy?</h2><button class="btn quiet" id="btnHoyCerrar">Cerrar</button></div>
+      <div id="hoyPreg">
+        <p class="note" style="margin-top:6px;font-size:15px">Toca lo que tengas en casa o lo que se te antoje. Te doy 4 ideas, de la más sencilla a la más elaborada.</p>
+        <div class="hoy-g" id="hoyGrupos"></div>
+        <form class="row" id="hoyForm">
+          <div class="field title"><label for="hoyTxt">O escribe un ingrediente</label><input id="hoyTxt" type="search" enterkeyhint="search" placeholder="Ej. nopales, atún, calabaza…" autocomplete="off"></div>
+          <button class="btn" type="submit" style="flex:1 1 140px">Buscar ideas</button>
+        </form>
+        <p class="status" id="hoyStTxt" style="margin:8px 0 0"></p>
+        <button class="btn" id="hoySorpresa" style="margin-top:12px;width:100%;color:var(--accent);font-weight:600">Sorpréndeme</button>
+      </div>
+      <div id="hoyRes" hidden>
+        <div class="hoy-mo" id="hoyMo" role="group" aria-label="Momento del día"></div>
+        <div class="hoy-casa"><span>Cantidades para</span><button class="btn" type="button" id="hoyMenos" aria-label="Una persona menos">−</button><b id="hoyCasa">4</b><button class="btn" type="button" id="hoyMas" aria-label="Una persona más">+</button><span id="hoyCasaT">personas</span></div>
+        <p class="status" id="hoySt" style="margin:10px 0 0"></p>
+        <div class="hoy-lista" id="hoyLista"></div>
+        <p class="note" id="hoyPie">Toca una idea para ver sus ingredientes, pasos y costo. El precio es aproximado, por persona, en la tienda que tienes elegida.</p>
+        <div class="actions" style="margin-top:12px"><button class="btn primary" type="button" id="hoyOtras">Otras 4 ideas</button><button class="btn" type="button" id="hoyCambiar">Cambiar alimento</button></div>
+      </div>
     </section>
 
     <section class="card" id="maridajesCard" hidden>
@@ -857,7 +906,7 @@ $("btnImportar").onclick=()=>$("fileImport").click();
 $("fileImport").onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!Array.isArray(d.recetas))throw 0;const ids=new Set(recetas.map(x=>x.id));let n=0;for(const r of d.recetas)if(!ids.has(r.id)){recetas.push(r);n++}if(d.catalogo&&typeof d.catalogo==="object")for(const k of Object.keys(d.catalogo))catalogo[k]=d.catalogo[k];if(d.fotos&&typeof d.fotos==="object")for(const k of Object.keys(d.fotos)){if(k===FB)continue;fotos[k]=d.fotos[k];idbPut(k,d.fotos[k])}persistir();persistirCat();renderLista();renderDatalist();toast(`${n} receta(s) restauradas.`)}catch{toast("Ese archivo no es un respaldo válido.")}e.target.value=""};fr.readAsText(f)};
 
 /* ---------- ayuda, paleta, maridajes ---------- */
-function cerrarPaneles(){for(const id of ["ayudaCard","maridajesCard","tiendasCard","catCard"])$(id).hidden=true}
+function cerrarPaneles(){for(const id of ["ayudaCard","maridajesCard","tiendasCard","catCard","hoyCard"])$(id).hidden=true}
 $("btnAyuda").onclick=()=>{const h=$("ayudaCard").hidden;cerrarPaneles();$("ayudaCard").hidden=!h;if(!$("ayudaCard").hidden)window.scrollTo({top:0,behavior:"smooth"})};
 $("btnAyudaOk").onclick=()=>{$("ayudaCard").hidden=true;try{localStorage.setItem("costeo.ayudaVista","1")}catch{}};
 (function(){let v=null;try{v=localStorage.getItem("costeo.ayudaVista")}catch{}if(!v)$("ayudaCard").hidden=false})();
@@ -1204,6 +1253,100 @@ function elegirDeBiblioteca(d){conPermiso().then(ok=>{if(!ok)return;cargarDesdeB
 // Cierra ventanas abiertas (pregunta, hoja para enviar, lista de compras). Devuelve true si cerró alguna.
 function cerrarCapas(){let c=false;if(dlgFin){dlgFin(null);c=true}for(const id of ["envio","compras"])if(!$(id).hidden){$(id).hidden=true;c=true}return c}
 
+/* ---------- ¿Qué cocinar hoy? ---------- */
+// Propone 4 recetas de la biblioteca, de la más sencilla a la más elaborada (2 básicas, 1 intermedia y 1 más elaborada),
+// según el tipo de alimento o un ingrediente escrito. Solo entran las recetas clasificadas al construir la app
+// (nivel, minutos, alimentos y momento del día), que son las que tienen descripción y pasos.
+const HOY_G=[["pollo","Pollo","Con pollo"],["res","Res","Con res"],["cerdo","Cerdo","Con cerdo"],["pescado","Pescado y mariscos","Con pescado o mariscos"],["verduras","Verduras","Con verduras"],["huevo","Huevo y queso","Con huevo o queso"],["frijol","Frijoles y lentejas","Con frijoles o lentejas"],["arroz","Arroz y pasta","Con arroz o pasta"],["maiz","Antojitos de maíz",""],["postres","Frutas y postres",""],["salsas","Chiles, salsas y especias",""],["bebidas","Bebidas",""]];
+const HOY_MO=[["","A cualquier hora"],["d","Desayuno"],["c","Comida"],["n","Cena ligera"]];
+const HOY_NIV=["","Básica","Intermedia","Más elaborada"];
+// Otras formas de decir lo mismo al escribir un ingrediente
+const HOY_SIN={tomate:["jitomate"],puerco:["cerdo"],marrano:["cerdo"],marisco:["camaron","pulpo","jaiba","almeja","calamar"],hongo:["champinon","seta","huitlacoche"],fideo:["pasta"],espagueti:["pasta"],blanquillo:["huevo"]};
+const HOY_SUG=BASE.RECETAS.filter(d=>d.niv&&d.s&&d.s.length);
+// Palabras de cada receta (nombre, palabras clave, región e ingredientes), también en singular. No cuentan grasas ni caldos en polvo:
+// «Consomé de pollo en polvo» no hace que una sopa de pasta sea «de pollo», ni la manteca vuelve «de cerdo» a unos frijoles.
+const HOY_AUX=/^(consome de pollo en polvo|manteca de cerdo|huesos de res|aceite .*|sal|azucar)$/;
+const hoySing=t=>{const v=[t];if(t.length>=4&&t.endsWith("s"))v.push(t.slice(0,-1));if(t.length>=6&&t.endsWith("es"))v.push(t.slice(0,-2));return v};
+const HOY_IDX=new Map(HOY_SUG.map(d=>{const s=new Set();for(const w of norm([d.n,d.k||"",d.g||"",d.i.map(x=>x[0]).filter(n=>!HOY_AUX.test(norm(n))).join(" ")].join(" ")).split(/[^a-z0-9]+/))if(w)for(const v of hoySing(w))s.add(v);return[d,s]}));
+const hoy={modo:"",clave:"",mo:"",vistas:new Set(),ideas:[]};
+function hoyTokens(t){return norm(t).split(/[^a-z0-9]+/).filter(x=>x.length>=3&&!["con","sin","para","los","las","del","una","unos","unas","que","tengo","hay","algo","poco","mucho","quiero"].includes(x))}
+function hoyVariantes(t){const v=hoySing(t);for(const x of v.slice())if(HOY_SIN[x])v.push(...HOY_SIN[x]);return v}
+function hoyPool(sinMomento){
+  let p=HOY_SUG;
+  if(hoy.modo==="g")p=p.filter(d=>d.al.includes(hoy.clave));
+  else if(hoy.modo==="t"){const tk=hoyTokens(hoy.clave).map(hoyVariantes);p=p.filter(d=>{const x=HOY_IDX.get(d);return tk.every(v=>v.some(w=>x.has(w)))})}
+  else p=p.filter(d=>d.al.some(a=>!["postres","bebidas","salsas"].includes(a)));
+  if(hoy.mo&&!sinMomento)p=p.filter(d=>d.mo.includes(hoy.mo));
+  return p;
+}
+function hoyRec(){try{const a=JSON.parse(localStorage.getItem("costeo.hoyRec")||"[]");return Array.isArray(a)?a.filter(x=>typeof x==="string"):[]}catch{return[]}}
+function hoyRecPon(nombres){try{localStorage.setItem("costeo.hoyRec",JSON.stringify(nombres.concat(hoyRec().filter(x=>!nombres.includes(x))).slice(0,40)))}catch{}}
+function hoyBarajar(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// Elige 4: primero las que no se han mostrado en esta búsqueda (y, entre ellas, las que no salieron en días pasados)
+function hoyElegir(pool){
+  const rec=new Set(hoyRec());
+  const nuevas=hoyBarajar(pool.filter(d=>!hoy.vistas.has(d.n))).sort((a,b)=>rec.has(a.n)-rec.has(b.n));
+  const viejas=hoyBarajar(pool.filter(d=>hoy.vistas.has(d.n)));
+  const out=[];
+  const toma=pref=>{for(const lista of [nuevas,viejas])for(const v of pref){const d=lista.find(x=>x.niv===v&&!out.includes(x));if(d){out.push(d);return}}};
+  for(const pref of [[1,2,3],[1,2,3],[2,1,3],[3,2,1]])toma(pref);
+  if(nuevas.length<=4)hoy.vistas=new Set();
+  for(const d of out)hoy.vistas.add(d.n);
+  if(out.length)hoyRecPon(out.map(d=>d.n));
+  return out.sort((a,b)=>a.niv-b.niv);
+}
+function hoyCasa(){let n=4;try{const a=parseInt(localStorage.getItem("costeo.casa"));if(a>0&&a<=60)n=a}catch{}return n}
+function hoyCasaPon(n){n=Math.max(1,Math.min(60,n));try{localStorage.setItem("costeo.casa",String(n))}catch{}$("hoyCasa").textContent=n;$("hoyCasaT").textContent=n===1?"persona":"personas"}
+// Costo aproximado por persona en la tienda elegida, con el mismo 10 % de imprevistos que usa el costeo
+function hoyCosto(d){let t=0,n=0;for(const [nom,q,u] of d.i){const p=precioEn(nom,tiendaA),f=FACTOR[u];if(!p||!f||!(Number(p.precio)>=0)||f[0]!==p.precioPor)continue;t+=q*f[1]*Number(p.precio);n++}return n?t*1.1:null}
+const hoyPesos=c=>c<1?"menos de $1":"$"+Math.round(c).toLocaleString("es-MX");
+const hoyMin=m=>m<60?m+" min":Math.floor(m/60)+" h"+(m%60?" "+(m%60)+" min":"");
+function hoyTitulo(){if(hoy.modo==="g"){const g=HOY_G.find(x=>x[0]===hoy.clave);return g[2]?g[2]+" puedes hacer":g[1]}if(hoy.modo==="t")return"Con «"+hoy.clave+"» puedes hacer";return"Ideas para hoy"}
+function hoyMostrar(res){if(res&&!hoy.modo)res=false;$("hoyPreg").hidden=res;$("hoyRes").hidden=!res;$("hoyTit").textContent=res?hoyTitulo():"¿Qué cocinar hoy?";if(!res)$("hoyStTxt").textContent=""}
+function hoyPintar(otras){
+  const pool=hoyPool();if(otras)hoy.ideas=hoyElegir(pool);
+  const L=$("hoyLista");L.textContent="";
+  for(const d of hoy.ideas){
+    const b=document.createElement("button");b.type="button";b.className="hoy-idea";
+    const mk=(c,t)=>{const e=document.createElement("span");e.className=c;e.textContent=t;return e};
+    const cab=mk("cab",""),c=hoyCosto(d);cab.append(mk("nom",d.n));if(c!=null){const pr=mk("pr","≈ "+hoyPesos(c));pr.append(mk("pp","por persona"));cab.append(pr)}
+    b.append(mk("niv n"+d.niv,HOY_NIV[d.niv]),cab,mk("de",d.d),mk("me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")));
+    b.onclick=()=>hoyAbrir(d);L.append(b);
+  }
+  const st=$("hoySt");st.className="status";
+  if(!pool.length){st.className="status err";const hay=hoyPool(true).length;st.textContent=hoy.mo&&hay?"No hay recetas así para "+({d:"el desayuno",c:"la comida",n:"una cena ligera"})[hoy.mo]+". Toca «A cualquier hora» para ver las "+hay+" que sí hay.":"No encontré recetas con eso. Toca «Cambiar alimento» y prueba con otra palabra."}
+  else st.textContent=pool.length===1?"Es la única receta que hay con eso.":pool.length<=4?"Son las "+pool.length+" recetas que hay con eso.":"Hay "+pool.length+" recetas posibles. Aquí van 4, de la más sencilla a la más elaborada.";
+  $("hoyOtras").hidden=pool.length<=4;$("hoyPie").hidden=!hoy.ideas.length;
+  for(const b of $("hoyMo").children)b.setAttribute("aria-pressed",String(b.dataset.mo===hoy.mo));
+  $("hoyTit").textContent=hoyTitulo();
+}
+function hoyArriba(){if(esTel())window.scrollTo(0,0);else $("hoyCard").scrollIntoView({behavior:"smooth",block:"start"})}
+function hoyEmpezar(modo,clave){
+  hoy.modo=modo;hoy.clave=clave;hoy.mo="";hoy.vistas=new Set();hoy.ideas=[];
+  if(modo==="t"&&!hoyPool().length){hoy.modo="";const s=$("hoyStTxt");s.className="status err";s.textContent="No encontré recetas con «"+clave+"». Prueba con otra palabra (por ejemplo, el ingrediente principal) o toca uno de los botones de arriba.";return}
+  hoyPintar(true);hoyMostrar(true);if(esTel()){try{history.pushState({p:"hoy",r:1},"")}catch{}}hoyArriba();
+}
+// Abre la idea elegida como receta nueva, para los comensales de casa y con porción completa, ya con precios estimados.
+// No cambia los comensales ni el tipo de porción que se recuerdan para el costeo de eventos.
+function hoyAbrir(d){conPermiso().then(ok=>{if(!ok)return;
+  actual=vacia();actual.porciones=hoyCasa();actual.tipo="completa";dirty=false;editada=false;limpiarBib();renderForm();renderLista();
+  cargarDesdeBiblioteca(d,true);$("btnPrecios").click();
+  if(esTel())ir("ingredientes");else $("ings").closest("section").scrollIntoView({behavior:"smooth",block:"start"});
+})}
+(function(){
+  const G=$("hoyGrupos");for(const [k,t] of HOY_G){const b=document.createElement("button");b.type="button";b.textContent=t;b.onclick=()=>hoyEmpezar("g",k);G.append(b)}
+  const M=$("hoyMo");for(const [k,t] of HOY_MO){const b=document.createElement("button");b.type="button";b.dataset.mo=k;b.textContent=t;b.setAttribute("aria-pressed","false");b.onclick=()=>{hoy.mo=k;hoy.vistas=new Set();hoyPintar(true)};M.append(b)}
+  $("hoyForm").addEventListener("submit",e=>{e.preventDefault();const t=$("hoyTxt").value.trim();if(!hoyTokens(t).length){const s=$("hoyStTxt");s.className="status err";s.textContent="Escribe un ingrediente, por ejemplo «nopales» o «atún».";$("hoyTxt").focus();return}$("hoyTxt").blur();hoyEmpezar("t",t)});
+  $("hoySorpresa").onclick=()=>hoyEmpezar("s","");
+  $("hoyOtras").onclick=()=>{hoyPintar(true);hoyArriba()};
+  $("hoyCambiar").onclick=()=>{if(esTel()&&history.state&&history.state.r){history.back();return}hoyMostrar(false);hoyArriba()};
+  $("hoyMenos").onclick=()=>hoyCasaPon(hoyCasa()-1);$("hoyMas").onclick=()=>hoyCasaPon(hoyCasa()+1);hoyCasaPon(hoyCasa());
+  const abrir=()=>{cerrarPaneles();hoyMostrar(false);$("hoyCard").hidden=false};
+  $("inHoy").onclick=()=>{abrir();ir("hoy")};
+  $("btnHoy").onclick=()=>{const h=$("hoyCard").hidden;cerrarPaneles();if(!h)return;abrir();hoyArriba()};
+  $("btnHoyCerrar").onclick=()=>{$("hoyCard").hidden=true;if(esTel())ir("inicio")};
+})();
+
 /* ---------- guía de siguiente paso y barra fija ---------- */
 function guia(){
   $("bTot").textContent=$("tTot").textContent;$("bPor").textContent="por persona "+$("tPor").textContent;
@@ -1225,9 +1368,9 @@ $("atTiendas").onclick=()=>$("btnTiendas").click();
 
 /* ---------- pantallas (teléfono): una cosa a la vez ---------- */
 const FLUJO=["receta","ingredientes","preparacion","costo"];
-const TIT={receta:"Elige la receta",ingredientes:"Ingredientes y precios",preparacion:"Preparación",costo:"Costo y compartir",recetas:"Mis recetas",sabores:"¿Con qué combina?",tiendas:"Tiendas",precios:"Mis precios",ayuda:"Ayuda"};
+const TIT={receta:"Elige la receta",ingredientes:"Ingredientes y precios",preparacion:"Preparación",costo:"Costo y compartir",recetas:"Mis recetas",sabores:"¿Con qué combina?",tiendas:"Tiendas",precios:"Mis precios",ayuda:"Ayuda",hoy:"¿Qué cocinar hoy?"};
 const esTel=()=>matchMedia("(max-width:760px)").matches;
-const PANEL={ayuda:"ayudaCard",sabores:"maridajesCard",tiendas:"tiendasCard",precios:"catCard"};
+const PANEL={ayuda:"ayudaCard",sabores:"maridajesCard",tiendas:"tiendasCard",precios:"catCard",hoy:"hoyCard"};
 // hist=true cuando se llega con el botón «atrás» del teléfono: no se agrega otra entrada al historial
 function ir(p,hist){
   const prev=document.body.dataset.p;
@@ -1240,7 +1383,7 @@ function ir(p,hist){
 }
 (function(){
   const sec=id=>$(id).closest("section");
-  for(const [id,p] of [["ayudaCard","ayuda"],["maridajesCard","sabores"],["tiendasCard","tiendas"],["catCard","precios"],["titulo","receta"],["ings","ingredientes"],["pasosCard","preparacion"],["consejosCard","preparacion"],["fotoImg","preparacion"],["tSub","costo"]])sec(id).dataset.p=p;
+  for(const [id,p] of [["ayudaCard","ayuda"],["maridajesCard","sabores"],["tiendasCard","tiendas"],["catCard","precios"],["hoyCard","hoy"],["titulo","receta"],["ings","ingredientes"],["pasosCard","preparacion"],["consejosCard","preparacion"],["fotoImg","preparacion"],["tSub","costo"]])sec(id).dataset.p=p;
   const panel=(btn,card,p)=>{cerrarPaneles();if(btn)$(btn).click();else $(card).hidden=false;ir(p)};
   $("tbInicio").onclick=()=>ir("inicio");
   $("inNueva").onclick=()=>{$("btnNueva").click();ir("receta");$("titulo").focus()};
@@ -1275,7 +1418,7 @@ $("btnConsejos").onclick=()=>{const l=$("consejosList");l.hidden=!l.hidden;const
 $("fechaRef").textContent=BASE.FECHA||"";$("fechaRef2").textContent=BASE.FECHA||"";
 cargar();const habiaBorrador=restaurarBorrador();renderDatalist();renderForm();renderLista();guia();ir($("ayudaCard").hidden?"inicio":"ayuda");
 try{history.replaceState({p:document.body.dataset.p},"")}catch{}
-window.addEventListener("popstate",e=>{if(cerrarCapas()){try{history.pushState({p:document.body.dataset.p},"")}catch{}return}if(!esTel())return;ir(e.state&&e.state.p||"inicio",true)});
+window.addEventListener("popstate",e=>{if(cerrarCapas()){try{history.pushState({p:document.body.dataset.p},"")}catch{}return}if(!esTel())return;ir(e.state&&e.state.p||"inicio",true);if(e.state&&e.state.p==="hoy")hoyMostrar(!!e.state.r)});
 if(habiaBorrador)setTimeout(()=>toast("Recuperé lo que estabas haciendo"+(actual.titulo.trim()?": «"+actual.titulo.trim()+"»":"")+"."),400);
 /* app instalable: solo cuando se abre desde internet (https). Con señal, sw.js siempre trae primero la versión más nueva. */
 if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{})}

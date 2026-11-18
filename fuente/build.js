@@ -17,16 +17,42 @@ const PASOS=require("./libro/pasos.js");let sinP=[];for(const d of BASE.RECETAS)
 // Vegetable Simple
 const tc=s=>s.split(" ").map((w,i)=>i&&["De","Y","Con","A","Al","La","El","En","Los","Las","Del","Au","Estilo"].includes(w)?w.toLowerCase():w).join(" ");
 const veg=JSON.parse(fs.readFileSync(AQUI("libro/veg_recetas.json"),"utf8"));
+// ripert_pasos.js: las 25 recetas más sencillas del libro, revisadas a mano (ingredientes, descripción, pasos y consejos)
+const RP=require("./libro/ripert_pasos.js");const rpUsadas=new Set();
 let nv=0;
 for(const r of veg){
   if(Y.OMITIR.includes(r.n))continue;
-  r.n=Y.TITULOS[r.n]||tc(r.n);
+  const o=RP[r.p];if(o)rpUsadas.add(String(r.p));
+  r.n=o?o.n:(Y.TITULOS[r.n]||tc(r.n));
   const ejote=/ejote/i.test(r.n);
   r.i=r.i.map(([n,q,u])=>{let nn=Y.NOMBRES.hasOwnProperty(n)?Y.NOMBRES[n]:n;if(nn===null)return null;if(ejote&&nn==="Frijol")nn="Ejote";if(n==="Jugo de limón"||n==="Jugo de lima"){q=q*2;u="g"}if(nn==="Anís estrella"){u="g"}if(nn==="Zacate limón"){u="pza";q=Math.max(0.05,q)}return[nn,q,u]}).filter(Boolean);
   r.i=r.i.filter(([n])=>n&&/^[A-ZÁÉÍÓÚÑ]/.test(n)&&n.length>2);
+  if(o){r.i=o.i.map(x=>[...x]);r.d=o.d;r.s=[...o.s];r.r=o.r;r.niv=o.niv;r.min=o.min;r.al=[...o.al];r.mo=[...o.mo];if(o.t)r.t=o.t}
   r.k="ripert verduras vegetariano "+r.n.toLowerCase();
-  r.c=[...(Y.TIPS_RIPERT[r.t]||Y.TIPS_RIPERT.Verduras)];
+  r.c=o?[...o.c]:[...(Y.TIPS_RIPERT[r.t]||Y.TIPS_RIPERT.Verduras)];
   delete r.serv;BASE.RECETAS.push(r);nv++;
+}
+{const f=Object.keys(RP).filter(k=>!rpUsadas.has(k));if(f.length)throw new Error("ripert_pasos.js: páginas sin receta: "+f.join(", "))}
+// Descripciones más claras (libro/descripciones.js) para saber de qué trata cada platillo antes de abrirlo
+{const DE=require("./libro/descripciones.js"),porN=new Map(BASE.RECETAS.map(d=>[d.n,d]));for(const [k,v] of Object.entries(DE)){const d=porN.get(k);if(!d)throw new Error("descripciones.js: no existe la receta «"+k+"»");d.d=v}}
+// Clasificación para «¿Qué cocinar hoy?»: nivel, minutos, tipo de alimento y momento del día.
+// Solo se sugieren las recetas clasificadas (las nuevas la traen consigo; las anteriores están en libro/clasif.js).
+const AL=["pollo","res","cerdo","pescado","verduras","huevo","frijol","arroz","maiz","postres","salsas","bebidas"],MO=["d","c","n"];
+{const CL=require("./libro/clasif.js"),vistos=new Set(),err=[];
+ for(const d of BASE.RECETAS){const c=CL[d.n];if(c&&!d.niv){const [v,m,a,o]=c.split("|");d.niv=+v;d.min=+m;d.al=a?a.split(","):[];d.mo=o?o.split(","):[];vistos.add(d.n)}}
+ for(const k of Object.keys(CL))if(!vistos.has(k))err.push("clasif.js: no existe la receta «"+k+"» (o ya trae su clasificación)");
+ const nombres=new Set();
+ for(const d of BASE.RECETAS){if(nombres.has(d.n.toLowerCase()))err.push("nombre repetido: "+d.n);nombres.add(d.n.toLowerCase());if(!d.niv)continue;
+  if(![1,2,3].includes(d.niv))err.push(d.n+": nivel inválido");if(!(d.min>0))err.push(d.n+": minutos inválidos");
+  if(!(d.s&&d.s.length))err.push(d.n+": clasificada pero sin pasos");if((d.d||"").trim().length<60)err.push(d.n+": clasificada pero con descripción muy corta");
+  for(const a of d.al)if(!AL.includes(a))err.push(d.n+": alimento desconocido «"+a+"»");
+  if(!d.mo.length)err.push(d.n+": sin momento del día");for(const m of d.mo)if(!MO.includes(m))err.push(d.n+": momento desconocido «"+m+"»");
+  for(const p of d.s)if(!/^[^:]{2,45}: \S/.test(p))err.push(d.n+": paso sin «Título: detalle» → "+p.slice(0,40))}
+ if(err.length)throw new Error("Clasificación:\n - "+err.join("\n - "));
+ const sug=BASE.RECETAS.filter(d=>d.niv);
+ log("¿Qué cocinar hoy?: "+sug.length+" recetas sugeribles. Por botón (básicas/intermedias/elaboradas · desayuno/comida/cena):");
+ for(const a of AL){const g=sug.filter(d=>d.al.includes(a));log("   "+a.padEnd(9)+String(g.length).padStart(3)+"  "+[1,2,3].map(v=>g.filter(d=>d.niv===v).length).join("/")+"  ·  "+MO.map(m=>g.filter(d=>d.mo.includes(m)).length).join("/"))}
+ log("con pasos pero sin clasificar (no se sugieren):",BASE.RECETAS.filter(d=>d.s&&d.s.length&&!d.niv).map(d=>d.n));
 }
 // Coerción de unidades al precio
 const PESO={"Laurel":0.3,"Queso de cabra":100,"Frijol":1,"Perejil":50,"Cilantro":50,"Hierbabuena":50,"Albahaca":50,"Romero":30,"Tomillo":30,"Lechuga romana":400,"Espinaca":250,"Rábano":15,"Elote":150,"Baguette":250,"Flor de calabaza":80,"Epazote":50,"Salvia fresca":40,"Cebolla cambray":15,"Zacate limón":40,"Piña":1200,"Coco":600,"Huevo":50,"Vaina de vainilla":3,"Limón":60,"Té (caja)":50};
