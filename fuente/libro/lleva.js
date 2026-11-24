@@ -11,7 +11,7 @@ const FUERA_DULCE=/^(sal|aceite .*|bicarbonato|polvo para hornear|hielo|fecula d
 // Importancia: [expresión, factor]
 const PESA=[
  [/manteca|consome|huesos/,1],
- [/pollo|pavo|\bres\b|bistec|diezmillo|chambarete|arrachera|machaca|cerdo|borrego|carnitas|cecina|chicharron|camaron|pescado|pulpo|salmon|atun|cazon|mojarra|jaiba|espinazo/,4],
+ [/pollo|pavo|\bres\b|bistec|diezmillo|chambarete|arrachera|machaca|cerdo|borrego|carnitas|cecina|chicharron|camaron|pescado|pulpo|salmon|atun|cazon|mojarra|jaiba|espinazo|salchicha/,4],
  [/huevo|frijol|lenteja|garbanzo|haba/,3],
  [/chorizo|tocino|jamon/,1.5],
  [/chile (guajillo|ancho|pasilla|morita|de arbol|piquin)|chipotle|mole en pasta|achiote|chocolate|cacao|flor de jamaica|tamarindo|pinole|amaranto|cajeta|pepita|cacahuate|ajonjoli|almendra|nuez\b/,6],

@@ -1373,9 +1373,10 @@ function hoyElegir(pool){
   const rec=new Set(hoyRec());
   const nuevas=hoyBarajar(pool.filter(d=>!hoy.vistas.has(d.n))).sort((a,b)=>rec.has(a.n)-rec.has(b.n));
   const viejas=hoyBarajar(pool.filter(d=>hoy.vistas.has(d.n)));
-  const out=[];
+  // Si se escribió el nombre de un platillo («espagueti a la mantequilla»), ese va primero aunque haya muchos parecidos
+  const out=hoy.modo==="t"?nuevas.filter(d=>norm(d.n).includes(norm(hoy.clave))).slice(0,4):[];
   const toma=pref=>{for(const lista of [nuevas,viejas])for(const v of pref){const d=lista.find(x=>x.niv===v&&!out.includes(x));if(d){out.push(d);return}}};
-  for(const pref of [[1,2,3],[1,2,3],[2,1,3],[3,2,1]])toma(pref);
+  for(const pref of [[1,2,3],[1,2,3],[2,1,3],[3,2,1]].slice(out.length))toma(pref);
   if(nuevas.length<=4)hoy.vistas=new Set();
   for(const d of out)hoy.vistas.add(d.n);
   if(out.length)hoyRecPon(out.map(d=>d.n));

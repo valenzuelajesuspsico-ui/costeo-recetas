@@ -60,3 +60,7 @@ module.exports.PRECIOS.push(
 ["Cecina enchilada",240,"kg","carniceria"],["Chile chilaca",70,"kg","mercado"],["Cátsup",55,"kg","walmart"],["Galletas saladas",95,"kg","walmart"],
 ["Vinagre de vino tinto",110,"L","walmart"],["Eneldo",28,"pza","calimax"]
 );
+// Tercera tanda de recetas de diario: desayunos, cerdo sencillo y arroz y pasta (incluye recetas de Profeco, «Platillo Sabio»)
+module.exports.FUENTES.profeco={titulo:"Revista del Consumidor, sección Platillo Sabio",autor:"Profeco (Platillo Sabio)"};
+module.exports.RECETAS.push(...require("./diario_c.js"));
+module.exports.PRECIOS.push(["Chile costeño",280,"kg","mercado"],["Germinado de soya",40,"kg","walmart"],["Salchicha",95,"kg","calimax"]);
