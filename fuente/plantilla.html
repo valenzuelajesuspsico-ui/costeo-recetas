@@ -288,25 +288,55 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
 /* ¿Qué cocinar hoy? */
 .hoy-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:12px 0}
 .hoy-g button{all:unset;box-sizing:border-box;display:flex;align-items:center;min-height:56px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-weight:600;line-height:1.25;cursor:pointer}
-.hoy-g button:hover,.hoy-idea:hover{border-color:var(--accent)}
-.hoy-g button:focus-visible,.hoy-idea:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.hoy-g button:hover,.hoy-idea:hover,.menu-dia:hover{border-color:var(--accent)}
+.hoy-g button:focus-visible,.hoy-ab:focus-visible,.menu-ab:focus-visible,.menu-hoy:focus-visible,.menu-armar:focus-visible,.hoy-lnk:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .hoy-mo{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
 .hoy-mo button{border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--bg);cursor:pointer;font-size:15px;color:var(--fg);min-height:40px}
 .hoy-mo button[aria-pressed="true"]{background:var(--olive);color:var(--olive-fg,#fff);border-color:var(--olive)}
+.hoy-lab{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin:4px 0 0}
+.hoy-lab+.hoy-mo{margin-top:6px}
 .hoy-casa{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px}
 .hoy-casa .btn{min-width:44px;padding:0 10px;font-size:20px;line-height:1}
 .hoy-casa b{min-width:1.6em;text-align:center;font-size:18px;font-variant-numeric:tabular-nums}
 .hoy-lista{display:flex;flex-direction:column;gap:10px;margin:10px 0}
-.hoy-idea{all:unset;box-sizing:border-box;width:100%;display:flex;flex-direction:column;gap:5px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer}
-.hoy-idea .niv{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
-.hoy-idea .n1{color:var(--ok)}.hoy-idea .n2{color:var(--warn)}.hoy-idea .n3{color:var(--accent)}
-.hoy-idea .cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.hoy-idea{box-sizing:border-box;width:100%;display:flex;flex-direction:column;gap:9px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.hoy-idea.no{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px}
+.hoy-ab{all:unset;box-sizing:border-box;width:100%;display:flex;flex-direction:column;gap:5px;cursor:pointer}
+.hoy-idea .niv,.sug .niv{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.hoy-idea .n1,.sug .n1{color:var(--ok)}.hoy-idea .n2,.sug .n2{color:var(--warn)}.hoy-idea .n3,.sug .n3{color:var(--accent)}
+.hoy-idea .cab,.sug .cab{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .hoy-idea .nom{font-family:var(--display);font-size:19px;line-height:1.25;min-width:0}
-.hoy-idea .pr{font-family:var(--display);font-size:18px;color:var(--accent);white-space:nowrap;text-align:right;line-height:1.25}
-.hoy-idea .pp{display:block;font-family:var(--body);font-size:11px;color:var(--muted);line-height:1.2}
+.hoy-idea .pr,.sug .pr{font-family:var(--display);font-size:18px;color:var(--accent);white-space:nowrap;text-align:right;line-height:1.25}
+.hoy-idea .pp,.sug .pp{display:block;font-family:var(--body);font-size:11px;color:var(--muted);line-height:1.2}
 .hoy-idea .de{font-size:14.5px;line-height:1.45}
+.hoy-idea .ll{font-size:13.5px;line-height:1.4}
+.hoy-idea .ll b,.sug .ll b{font-weight:600}
+.sug p.ll{color:var(--fg)}
 .hoy-idea .me{font-size:13px;color:var(--muted)}
-#hoyRes .actions .btn{flex:1 1 140px;min-height:48px}
+.hoy-acc{display:flex;flex-wrap:wrap;gap:8px}
+.hoy-acc button{border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:38px;font-size:13.5px;background:var(--panel);color:var(--fg);cursor:pointer}
+.hoy-acc button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
+.hoy-lnk{all:unset;color:var(--accent);text-decoration:underline;cursor:pointer;white-space:nowrap;font-size:14px;padding:8px 0}
+#hoyRes .actions .btn,#hoyMenu .actions .btn{flex:1 1 140px;min-height:48px}
+/* Menú de la semana */
+.menu-hoy{all:unset;box-sizing:border-box;width:100%;display:flex;flex-direction:column;gap:2px;border:2px solid var(--accent);border-radius:12px;padding:11px 13px;margin:8px 0 10px;cursor:pointer}
+.menu-hoy small{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.menu-hoy b{font-family:var(--display);font-weight:400;font-size:20px;line-height:1.25}
+.menu-hoy span,.menu-armar span{font-size:13.5px;color:var(--muted)}
+.menu-armar{all:unset;box-sizing:border-box;width:100%;display:flex;flex-direction:column;gap:2px;border:1px dashed var(--accent);border-radius:12px;padding:11px 13px;margin:8px 0 4px;cursor:pointer}
+.menu-armar b{font-size:16px;font-weight:600}
+.menu-dias{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.menu-dia{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:5px 10px 5px 12px;background:var(--bg)}
+.menu-dia.hoy{border-color:var(--accent);border-width:2px}
+.menu-dia.pasado{opacity:.55}
+.menu-ab{all:unset;box-sizing:border-box;flex:1;min-width:0;display:flex;gap:10px;align-items:flex-start;padding:6px 0;cursor:pointer}
+.menu-ab .d{flex:0 0 50px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding-top:4px}
+.menu-ab .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.menu-ab .t b{font-family:var(--display);font-weight:400;font-size:17.5px;line-height:1.25}
+.menu-ab .t small{font-size:12.5px;color:var(--muted)}
+.menu-cam{border:1px solid var(--line);border-radius:999px;padding:7px 12px;min-height:38px;font-size:13px;background:var(--panel);color:var(--fg);cursor:pointer;white-space:nowrap}
+.menu-tot{border-top:1px solid var(--line);margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14.5px}
+.menu-tot b{font-family:var(--display);font-weight:400;font-size:24px;color:var(--accent)}
 .lnks{display:flex;flex-wrap:wrap;gap:8px}
 .lnk{border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--bg);font-size:15px;color:var(--fg);text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
 .lnk:hover{border-color:var(--accent)}
@@ -367,7 +397,9 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
         <li class="paso"><b>Escribe qué vas a preparar</b> en el primer cuadro (por ejemplo «crema de calabaza» o «buñuelos») y cuántas personas van a comer. Elige si cada persona come una porción completa o solo una probadita (degustación). Si después cambias el número de personas o el tipo de porción, las cantidades se ajustan solas.</li>
         <li class="paso"><b>Toca «Sugerir receta»</b>. Aparecen hasta tres opciones parecidas, con el libro de donde salen. Toca «Usar esta» en la que te guste. Si no aparece nada, baja a «Biblioteca de recetas» (puedes elegir una región o buscar por platillo, ingrediente o estado), o toca «Escribir a mano» y pon los ingredientes tú misma.</li>
         <li class="paso"><b>Mira las «Otras ideas»</b> que salen debajo de las sugerencias: variaciones del platillo (por ejemplo «con nopales»; al tocarla se agrega el ingrediente), recetas parecidas de los libros, sabores que combinan y enlaces para buscar videos o recetas en internet.</li>
-        <li class="paso"><b>Si no sabes qué cocinar</b>, toca «¿Qué cocinar hoy?». Elige lo que tengas (pollo, verduras, huevo…) o escribe un ingrediente, y aparecen 4 ideas, de la más sencilla a la más elaborada. Cada una dice de qué trata, cuánto tarda y cuánto cuesta por persona. Si quieres, elige si es para desayuno, comida o cena ligera. Toca la que te guste y se abre con sus ingredientes, precios y pasos; «Otras 4 ideas» te da más opciones.</li>
+        <li class="paso"><b>Si no sabes qué cocinar</b>, toca «¿Qué cocinar hoy?». Elige lo que tengas (pollo, verduras, huevo…) o escribe un ingrediente, y aparecen 4 ideas, de la más sencilla a la más elaborada. Cada una dice de qué trata, qué lleva, cuánto tarda y cuánto cuesta por persona. Con «Solo quiero ver» puedes dejar solo las rápidas (45 minutos o menos), las más económicas o las que no llevan chile. Toca la que te guste y se abre con sus ingredientes, precios y pasos; «Otras 4 ideas» te da más opciones.</li>
+        <li class="paso"><b>Marca las recetas</b> para que las ideas se parezcan a tu casa: «Me gustó» la guarda en «Mis favoritas», «Ya la hice» evita que se repita en dos semanas y «No sugerir» la quita de las ideas (se puede recuperar desde la misma pantalla).</li>
+        <li class="paso"><b>Menú de la semana</b>: en «¿Qué cocinar hoy?» toca «Armar el menú de la semana». Salen 5 comidas, de lunes a viernes, casi todas sencillas y variadas. Con «Cambiar» pones otro platillo ese día. Abajo ves cuánto cuesta la semana y la «Lista de compras de la semana», con todo sumado. En el inicio aparece lo que toca hoy.</li>
         <li class="paso"><b>Toca «Estimar precios»</b>. La página pone un precio aproximado a cada ingrediente y en qué tienda conviene comprarlo. Son precios de referencia: si sabes que algo cuesta distinto, escribe el precio real en su cuadro y la página lo recordará para la próxima vez.</li>
         <li class="paso"><b>Revisa el total</b> al final: lo que cuestan los ingredientes, un 10 % extra para imprevistos y cuánto sale por persona.</li>
         <li class="paso"><b>Toca «Guardar receta»</b> para que quede en la lista de la izquierda (en el teléfono, en el botón «☰ Recetas guardadas»). Ahí puedes volver a abrirla cuando quieras.</li>
@@ -384,6 +416,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
     <section class="card" id="hoyCard" hidden>
       <div class="hdrrow"><h2 id="hoyTit">¿Qué cocinar hoy?</h2><button class="btn quiet" id="btnHoyCerrar">Cerrar</button></div>
       <div id="hoyPreg">
+        <div id="hoySemana"></div>
         <p class="note" style="margin-top:6px;font-size:15px">Toca lo que tengas en casa o lo que se te antoje. Te doy 4 ideas, de la más sencilla a la más elaborada.</p>
         <div class="hoy-g" id="hoyGrupos"></div>
         <form class="row" id="hoyForm">
@@ -391,15 +424,27 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
           <button class="btn" type="submit" style="flex:1 1 140px">Buscar ideas</button>
         </form>
         <p class="status" id="hoyStTxt" style="margin:8px 0 0"></p>
-        <button class="btn" id="hoySorpresa" style="margin-top:12px;width:100%;color:var(--accent);font-weight:600">Sorpréndeme</button>
+        <button class="btn" type="button" id="hoySorpresa" style="margin-top:12px;width:100%;color:var(--accent);font-weight:600">Sorpréndeme</button>
+        <button class="btn" type="button" id="hoyFavs" style="margin-top:10px;width:100%" hidden>♥ Mis favoritas</button>
+        <p class="note" id="hoyOcultas" style="margin-top:12px" hidden><span id="hoyOcultasT"></span> <button type="button" class="hoy-lnk" id="hoyOcultasVer">Ver y recuperar</button></p>
       </div>
       <div id="hoyRes" hidden>
         <div class="hoy-mo" id="hoyMo" role="group" aria-label="Momento del día"></div>
-        <div class="hoy-casa"><span>Cantidades para</span><button class="btn" type="button" id="hoyMenos" aria-label="Una persona menos">−</button><b id="hoyCasa">4</b><button class="btn" type="button" id="hoyMas" aria-label="Una persona más">+</button><span id="hoyCasaT">personas</span></div>
+        <div id="hoyFilB"><div class="hoy-lab">Solo quiero ver</div><div class="hoy-mo" id="hoyFil" role="group" aria-label="Solo quiero ver"></div></div>
+        <div class="hoy-casa" id="hoyCasaB"><span>Cantidades para</span><button class="btn" type="button" id="hoyMenos" aria-label="Una persona menos">−</button><b id="hoyCasa">4</b><button class="btn" type="button" id="hoyMas" aria-label="Una persona más">+</button><span id="hoyCasaT">personas</span></div>
         <p class="status" id="hoySt" style="margin:10px 0 0"></p>
         <div class="hoy-lista" id="hoyLista"></div>
         <p class="note" id="hoyPie">Toca una idea para ver sus ingredientes, pasos y costo. El precio es aproximado, por persona, en la tienda que tienes elegida.</p>
         <div class="actions" style="margin-top:12px"><button class="btn primary" type="button" id="hoyOtras">Otras 4 ideas</button><button class="btn" type="button" id="hoyCambiar">Cambiar alimento</button></div>
+      </div>
+      <div id="hoyMenu" hidden>
+        <div id="menuHoy"></div>
+        <div class="hoy-casa"><span>5 comidas para</span><button class="btn" type="button" id="menuMenos" aria-label="Una persona menos">−</button><b id="menuCasa">4</b><button class="btn" type="button" id="menuMas" aria-label="Una persona más">+</button><span id="menuCasaT">personas</span></div>
+        <p class="note" style="margin:10px 0 0">Toca un platillo para ver su receta, o «Cambiar» si ese día prefieres otro.</p>
+        <div class="menu-dias" id="menuDias"></div>
+        <div class="menu-tot"><span>Toda la semana, aproximado</span><b id="menuTot"></b></div>
+        <p class="note" id="menuNota" style="margin:6px 0 0"></p>
+        <div class="actions" style="margin-top:12px"><button class="btn primary" type="button" id="menuCompras" style="flex-basis:100%">Lista de compras de la semana</button><button class="btn" type="button" id="menuOtro">Armar otro menú</button><button class="btn" type="button" id="menuBuscar">Buscar otra idea</button></div>
       </div>
     </section>
 
@@ -838,7 +883,12 @@ $("btnSugerir").onclick=()=>{
     else{tag.textContent="Receta guardada";h.textContent=x.r.titulo;p.textContent=`${x.r.porciones} comensales · ${mxn(totalDe(x.r))}`;ings=(x.r.ingredientes||[]).map(i=>i.nombre);b.onclick=()=>usarSugerencia(()=>cargarDesdeGuardada(x.r))}
     for(const i of ings.slice(0,7)){const li=document.createElement("li");li.textContent=i;ul.append(li)}
     if(ings.length>7){const li=document.createElement("li");li.textContent=`y ${ings.length-7} más`;ul.append(li)}
-    card.append(tag,h,p,ul,b);box.append(card);
+    // Mismas señas que las tarjetas de «¿Qué cocinar hoy?»: nivel, costo por persona, qué lleva y tiempo
+    const d=x.tipo==="biblioteca"?x.d:null,cab=hoyEl("div","cab");cab.append(h);
+    if(d){const c=hoyCosto(d);if(c!=null){const pr=hoyEl("span","pr","≈ "+hoyPesos(c));pr.append(hoyEl("span","pp","por persona"));cab.append(pr)}}
+    card.append(tag);if(d&&d.niv)card.append(hoyEl("span","niv n"+d.niv,HOY_NIV[d.niv]));card.append(cab,p);
+    if(d&&d.ll){const l=hoyEl("p","ll");l.append(hoyEl("b",null,"Lleva: "),d.ll);card.append(l,hoyEl("p","me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")))}else card.append(ul);
+    card.append(b);box.append(card);
   }
   box.hidden=false;$("stSug").textContent="Elige una versión; las cantidades se calculan para los comensales indicados.";
 };
@@ -1052,13 +1102,16 @@ function conLogo(){const c=$("conLogo");return !!(c&&c.checked)}
 (function(){const a=$("autor");try{a.value=localStorage.getItem("costeo.autor")||""}catch{}a.oninput=()=>{try{localStorage.setItem("costeo.autor",a.value)}catch{}}})();
 
 /* ---------- lista de compras por tienda ---------- */
-const KEY_L="costeo.compras";let marc={k:"",m:[]};
+const KEY_L="costeo.compras";let marc={k:"",m:[]},compraSrc=null;
 const claveCompra=()=>actual.id||norm(actual.titulo)||"sin-titulo";
-function cargarMarc(){try{const v=JSON.parse(localStorage.getItem(KEY_L)||"null");if(v&&v.k===claveCompra()&&Array.isArray(v.m)){marc=v;return}}catch{}marc={k:claveCompra(),m:[]}}
-function guardarMarc(){try{localStorage.setItem(KEY_L,JSON.stringify(marc))}catch{}}
+// La lista sale de la receta abierta o, si se pidió desde el menú de la semana, de sus comidas sumadas (compraSrc)
+const compraDe=()=>compraSrc||{titulo:actual.titulo||"Receta",sub:actual.porciones+" comensales",filas:actual.ingredientes,clave:claveCompra()};
+const keyCompra=()=>compraSrc?KEY_L+"Semana":KEY_L;
+function cargarMarc(){const k=compraDe().clave;try{const v=JSON.parse(localStorage.getItem(keyCompra())||"null");if(v&&v.k===k&&Array.isArray(v.m)){marc=v;return}}catch{}marc={k,m:[]}}
+function guardarMarc(){try{localStorage.setItem(keyCompra(),JSON.stringify(marc))}catch{}}
 function gruposCompra(){
   const g=new Map();
-  for(const r of actual.ingredientes){if(!r.nombre.trim())continue;const real=!!(r.tienda||"").trim(),t=real?r.tienda.trim():"Donde prefieras";if(!g.has(t))g.set(t,{tienda:t,real,dir:real?r.dir||"":"",items:[],sub:0});
+  for(const r of compraDe().filas){if(!r.nombre.trim())continue;const real=!!(r.tienda||"").trim(),t=real?r.tienda.trim():"Donde prefieras";if(!g.has(t))g.set(t,{tienda:t,real,dir:real?r.dir||"":"",items:[],sub:0});
     const c=costo(r),ok=c!==null&&!Number.isNaN(c),G=g.get(t);G.items.push({n:r.nombre.trim(),q:cantTxt(r.cantidad,r.unidad),c:ok?c:null,ok:marc.m.includes(norm(r.nombre))});if(ok)G.sub+=c}
   return[...g.values()].sort((a,b)=>b.items.length-a.items.length);
 }
@@ -1075,17 +1128,17 @@ function pintarCompras(){
     box.append(sec);tot+=g.sub;
   }
   const t=E("div",null,"ctotal");t.append(E("span","Total aproximado"),E("span",mxn(tot)));box.append(t);
-  $("comprasMeta").textContent=`${actual.titulo||"Receta"} · ${actual.porciones} comensales. Marca lo que ya tengas en el carrito; la lista recuerda las marcas.`;
+  const S=compraDe();$("comprasMeta").textContent=`${S.titulo} · ${S.sub}. Marca lo que ya tengas en el carrito; la lista recuerda las marcas.`;
 }
 function listaTexto(){
-  const gs=gruposCompra(),L=[`Lista de compras: ${actual.titulo||"Receta"} (${actual.porciones} comensales)`,""];let tot=0;
+  const S=compraDe(),gs=gruposCompra(),L=[`Lista de compras: ${S.titulo} (${S.sub})`,...(S.notas||[]),""];let tot=0;
   for(const g of gs){L.push(g.tienda.toUpperCase());for(const it of g.items)L.push(`${it.ok?"[x]":"[ ]"} ${it.n}${it.q?": "+it.q:""}${it.c!=null?" ("+mxn(it.c)+")":""}`);if(gs.length>1)L.push("Subtotal: "+mxn(g.sub));L.push("");tot+=g.sub}
   L.push("Total aproximado: "+mxn(tot),"Precios de referencia; confirma en la tienda.");return L.join("\n");
 }
 async function listaCanvas(){
   const gs=gruposCompra();if(!gs.length){toast("Primero agrega ingredientes.");return null}
   const cs=getComputedStyle(document.documentElement),col=v=>cs.getPropertyValue(v).trim()||"#333";
-  const W=1080,M=56,rowH=60,F=FH,autor=$("autor").value.trim(),titulo=actual.titulo||"Receta";
+  const S=compraDe(),W=1080,M=56,rowH=60,F=FH,autor=$("autor").value.trim(),titulo=S.titulo;
   const lg=conLogo()?await cargarImg(LOGO):null;
   const med=document.createElement("canvas").getContext("2d");med.font=TITF;const tl=partirTxt(med,titulo,W-2*M,2),dy=(tl.length-1)*62;
   const H=236+dy+gs.reduce((a,g)=>a+92+(g.dir?34:0)+g.items.length*rowH+(gs.length>1?62:16),0)+100+(lg?176:(autor?64:0))+110;
@@ -1093,7 +1146,7 @@ async function listaCanvas(){
   x.fillStyle="#ffffff";x.fillRect(0,0,W,H);x.fillStyle=col("--olive");x.fillRect(0,0,W,14);
   x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle=col("--accent");x.font=F(24,700);x.fillText("LISTA DE COMPRAS",M,78);
   x.fillStyle="#1d1d1b";x.font=TITF;tl.forEach((t,i)=>x.fillText(t,M,146+i*62));
-  x.fillStyle="#666";x.font=F(28);x.fillText(fit(`${actual.porciones} comensales · ${new Date().toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"})}`,W-2*M),M,196+dy);
+  x.fillStyle="#666";x.font=F(28);x.fillText(fit(`${S.sub} · ${new Date().toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"})}`,W-2*M),M,196+dy);
   let y=236+dy,tot=0;const cQ=W-M-210,nameW=cQ-(M+52)-190;
   for(const g of gs){
     y+=20;x.textAlign="left";x.fillStyle=col("--olive");x.font=F(32,700);x.fillText(fit(g.tienda,W-2*M),M,y+38);y+=52;
@@ -1116,9 +1169,9 @@ async function listaCanvas(){
   x.textAlign="left";x.fillStyle="#777";x.font=F(22);x.fillText(fit("Precios de referencia estimados para Tijuana, B.C. ("+(BASE.FECHA||"")+").",W-2*M),M,H-70);x.fillText(fit("Pueden variar según la tienda y el día; confirma antes de comprar.",W-2*M),M,H-38);
   return c;
 }
-$("btnCompras").onclick=()=>{if(!actual.ingredientes.some(r=>r.nombre.trim())){toast("Primero agrega ingredientes.");return}cargarMarc();pintarCompras();$("compras").hidden=false};
+$("btnCompras").onclick=()=>{if(!actual.ingredientes.some(r=>r.nombre.trim())){toast("Primero agrega ingredientes.");return}compraSrc=null;cargarMarc();pintarCompras();$("compras").hidden=false};
 $("comprasCerrar").onclick=()=>{$("compras").hidden=true};
-$("comprasImg").onclick=async()=>{const c=await listaCanvas();if(!c)return;const t="Lista de compras "+(actual.titulo||"");c.toBlob(b=>compartir(b,nombreArch(t)+".png",t,c.toDataURL("image/jpeg",0.8)),"image/png")};
+$("comprasImg").onclick=async()=>{const c=await listaCanvas();if(!c)return;const t="Lista de compras "+compraDe().titulo;c.toBlob(b=>compartir(b,nombreArch(t)+".png",t,c.toDataURL("image/jpeg",0.8)),"image/png")};
 $("comprasTxt").onclick=()=>{const t=listaTexto();if(navigator.share){navigator.share({title:"Lista de compras",text:t}).catch(e=>{if(!e||e.name!=="AbortError")copiarTexto(t,"Lista copiada. Pégala en WhatsApp o donde quieras.")})}else copiarTexto(t,"Lista copiada. Pégala en WhatsApp o donde quieras.")};
 
 /* ---------- otras ideas de preparación ---------- */
@@ -1257,30 +1310,63 @@ function cerrarCapas(){let c=false;if(dlgFin){dlgFin(null);c=true}for(const id o
 // Propone 4 recetas de la biblioteca, de la más sencilla a la más elaborada (2 básicas, 1 intermedia y 1 más elaborada),
 // según el tipo de alimento o un ingrediente escrito. Solo entran las recetas clasificadas al construir la app
 // (nivel, minutos, alimentos y momento del día), que son las que tienen descripción y pasos.
+// Cada tarjeta dice qué lleva el platillo y deja marcarlo: «Me gustó» (favoritas), «Ya la hice» (no se repite en dos semanas)
+// y «No sugerir» (se oculta; se puede recuperar). Además arma el menú de la semana: 5 comidas y una sola lista de compras.
 const HOY_G=[["pollo","Pollo","Con pollo"],["res","Res","Con res"],["cerdo","Cerdo","Con cerdo"],["pescado","Pescado y mariscos","Con pescado o mariscos"],["verduras","Verduras","Con verduras"],["huevo","Huevo y queso","Con huevo o queso"],["frijol","Frijoles y lentejas","Con frijoles o lentejas"],["arroz","Arroz y pasta","Con arroz o pasta"],["maiz","Antojitos de maíz",""],["postres","Frutas y postres",""],["salsas","Chiles, salsas y especias",""],["bebidas","Bebidas",""]];
 const HOY_MO=[["","A cualquier hora"],["d","Desayuno"],["c","Comida"],["n","Cena ligera"]];
 const HOY_NIV=["","Básica","Intermedia","Más elaborada"];
+const HOY_FIL=[["rap","Rápidas (45 min)"],["eco","Económicas"],["sinp","Sin picante"],["fav","♥ Mis favoritas"]];
+const HOY_RAPIDA=45;   // «Rápidas»: 45 minutos o menos (con 30 no quedaba ninguna receta de pollo y casi ninguna de res)
+const MENU_CARO=55;    // en el menú de la semana se evitan, mientras se pueda, los platillos de más de 55 pesos por persona
+const HOY_REPOSO=14;   // días en que no se vuelve a sugerir una receta marcada «Ya la hice»
 // Otras formas de decir lo mismo al escribir un ingrediente
 const HOY_SIN={tomate:["jitomate"],puerco:["cerdo"],marrano:["cerdo"],marisco:["camaron","pulpo","jaiba","almeja","calamar"],hongo:["champinon","seta","huitlacoche"],fideo:["pasta"],espagueti:["pasta"],blanquillo:["huevo"]};
 const HOY_SUG=BASE.RECETAS.filter(d=>d.niv&&d.s&&d.s.length);
+const HOY_POR=new Map(HOY_SUG.map(d=>[d.n,d]));
 // Palabras de cada receta (nombre, palabras clave, región e ingredientes), también en singular. No cuentan grasas ni caldos en polvo:
 // «Consomé de pollo en polvo» no hace que una sopa de pasta sea «de pollo», ni la manteca vuelve «de cerdo» a unos frijoles.
 const HOY_AUX=/^(consome de pollo en polvo|manteca de cerdo|huesos de res|aceite .*|sal|azucar)$/;
 const hoySing=t=>{const v=[t];if(t.length>=4&&t.endsWith("s"))v.push(t.slice(0,-1));if(t.length>=6&&t.endsWith("es"))v.push(t.slice(0,-2));return v};
 const HOY_IDX=new Map(HOY_SUG.map(d=>{const s=new Set();for(const w of norm([d.n,d.k||"",d.g||"",d.i.map(x=>x[0]).filter(n=>!HOY_AUX.test(norm(n))).join(" ")].join(" ")).split(/[^a-z0-9]+/))if(w)for(const v of hoySing(w))s.add(v);return[d,s]}));
-const hoy={modo:"",clave:"",mo:"",vistas:new Set(),ideas:[]};
+// «Sin picante» = recetas que no llevan ningún chile, chipotle, mole ni salsa picante entre sus ingredientes
+const HOY_PICA=new Set(HOY_SUG.filter(d=>d.i.some(x=>/\bchiles?\b|chipotle|habanero|sriracha|shichimi|mole en pasta|enchilad/.test(norm(x[0])))).map(d=>d.n));
+const hoy={modo:"",clave:"",mo:"",fil:{},tope:null,vistas:new Set(),ideas:[],vista:"preg"};
+const hoyEl=(tag,c,t)=>{const e=document.createElement(tag);if(c)e.className=c;if(t!=null)e.textContent=t;if(tag==="button")e.type="button";return e};
+
+// --- lo que se recuerda en el teléfono ---
+const hoyLee=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v}catch{return d}};
+const hoyPon=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const hoyLista=k=>{const a=hoyLee(k,[]);return new Set(Array.isArray(a)?a.filter(x=>typeof x==="string"):[])};
+const hoyFav=hoyLista("costeo.hoyFav"),hoyNo=hoyLista("costeo.hoyNo");
+const hoyHechas=(o=>o&&typeof o==="object"&&!Array.isArray(o)?o:{})(hoyLee("costeo.hoyHechas",{}));
+const hoyFecha=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const hoyDeFecha=s=>{const [y,m,d]=String(s).split("-").map(Number);return new Date(y,m-1,d,12)};
+const hoyDiasDesde=s=>Math.round((hoyDeFecha(hoyFecha())-hoyDeFecha(s))/864e5);
+const hoyReciente=n=>{const f=hoyHechas[n];if(typeof f!=="string")return false;const d=hoyDiasDesde(f);return d>=0&&d<HOY_REPOSO};
+
 function hoyTokens(t){return norm(t).split(/[^a-z0-9]+/).filter(x=>x.length>=3&&!["con","sin","para","los","las","del","una","unos","unas","que","tengo","hay","algo","poco","mucho","quiero"].includes(x))}
 function hoyVariantes(t){const v=hoySing(t);for(const x of v.slice())if(HOY_SIN[x])v.push(...HOY_SIN[x]);return v}
-function hoyPool(sinMomento){
-  let p=HOY_SUG;
-  if(hoy.modo==="g")p=p.filter(d=>d.al.includes(hoy.clave));
-  else if(hoy.modo==="t"){const tk=hoyTokens(hoy.clave).map(hoyVariantes);p=p.filter(d=>{const x=HOY_IDX.get(d);return tk.every(v=>v.some(w=>x.has(w)))})}
-  else p=p.filter(d=>d.al.some(a=>!["postres","bebidas","salsas"].includes(a)));
-  if(hoy.mo&&!sinMomento)p=p.filter(d=>d.mo.includes(hoy.mo));
+// Recetas que entran según lo elegido. Se pueden pedir sin el momento, sin los filtros o sin quitar las hechas hace poco,
+// para poder decir por qué una búsqueda salió vacía.
+function hoyPool(o={}){
+  let p;
+  if(hoy.modo==="g")p=HOY_SUG.filter(d=>d.al.includes(hoy.clave));
+  else if(hoy.modo==="t"){const tk=hoyTokens(hoy.clave).map(hoyVariantes);p=HOY_SUG.filter(d=>{const x=HOY_IDX.get(d);return tk.every(v=>v.some(w=>x.has(w)))})}
+  else if(hoy.modo==="f")p=HOY_SUG.filter(d=>hoyFav.has(d.n));
+  else p=HOY_SUG.filter(d=>d.al.some(a=>!["postres","bebidas","salsas"].includes(a)));
+  p=p.filter(d=>!hoyNo.has(d.n));
+  if(o.mo!==false&&hoy.mo)p=p.filter(d=>d.mo.includes(hoy.mo));
+  if(o.fil!==false){const f=hoy.fil;
+    // «Económicas»: la mitad más barata de lo que hay para esta búsqueda. Un tope fijo en pesos dejaba sin nada a res y a pescado.
+    if(f.eco){const cs=new Map(p.map(d=>[d,hoyCosto(d)])),v=[...cs.values()].filter(c=>c!=null).sort((a,b)=>a-b);hoy.tope=v.length?v[Math.floor((v.length-1)/2)]:null;p=p.filter(d=>hoy.tope!=null&&cs.get(d)!=null&&cs.get(d)<=hoy.tope)}
+    if(f.rap)p=p.filter(d=>d.min<=HOY_RAPIDA);
+    if(f.sinp)p=p.filter(d=>!HOY_PICA.has(d.n));
+    if(f.fav)p=p.filter(d=>hoyFav.has(d.n))}
+  if(o.hechas!==false&&(hoy.modo==="g"||hoy.modo==="s"))p=p.filter(d=>!hoyReciente(d.n));
   return p;
 }
-function hoyRec(){try{const a=JSON.parse(localStorage.getItem("costeo.hoyRec")||"[]");return Array.isArray(a)?a.filter(x=>typeof x==="string"):[]}catch{return[]}}
-function hoyRecPon(nombres){try{localStorage.setItem("costeo.hoyRec",JSON.stringify(nombres.concat(hoyRec().filter(x=>!nombres.includes(x))).slice(0,40)))}catch{}}
+function hoyRec(){const a=hoyLee("costeo.hoyRec",[]);return Array.isArray(a)?a.filter(x=>typeof x==="string"):[]}
+function hoyRecPon(nombres){hoyPon("costeo.hoyRec",nombres.concat(hoyRec().filter(x=>!nombres.includes(x))).slice(0,40))}
 function hoyBarajar(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 // Elige 4: primero las que no se han mostrado en esta búsqueda (y, entre ellas, las que no salieron en días pasados)
 function hoyElegir(pool){
@@ -1295,36 +1381,90 @@ function hoyElegir(pool){
   if(out.length)hoyRecPon(out.map(d=>d.n));
   return out.sort((a,b)=>a.niv-b.niv);
 }
-function hoyCasa(){let n=4;try{const a=parseInt(localStorage.getItem("costeo.casa"));if(a>0&&a<=60)n=a}catch{}return n}
-function hoyCasaPon(n){n=Math.max(1,Math.min(60,n));try{localStorage.setItem("costeo.casa",String(n))}catch{}$("hoyCasa").textContent=n;$("hoyCasaT").textContent=n===1?"persona":"personas"}
+function hoyCasa(){const a=parseInt(hoyLee("costeo.casa",4));return a>0&&a<=60?a:4}
+function hoyCasaPon(n){n=Math.max(1,Math.min(60,n));hoyPon("costeo.casa",n);for(const p of ["hoy","menu"]){$(p+"Casa").textContent=n;$(p+"CasaT").textContent=n===1?"persona":"personas"}if(hoy.vista==="menu")menuPintar()}
 // Costo aproximado por persona en la tienda elegida, con el mismo 10 % de imprevistos que usa el costeo
 function hoyCosto(d){let t=0,n=0;for(const [nom,q,u] of d.i){const p=precioEn(nom,tiendaA),f=FACTOR[u];if(!p||!f||!(Number(p.precio)>=0)||f[0]!==p.precioPor)continue;t+=q*f[1]*Number(p.precio);n++}return n?t*1.1:null}
 const hoyPesos=c=>c<1?"menos de $1":"$"+Math.round(c).toLocaleString("es-MX");
 const hoyMin=m=>m<60?m+" min":Math.floor(m/60)+" h"+(m%60?" "+(m%60)+" min":"");
-function hoyTitulo(){if(hoy.modo==="g"){const g=HOY_G.find(x=>x[0]===hoy.clave);return g[2]?g[2]+" puedes hacer":g[1]}if(hoy.modo==="t")return"Con «"+hoy.clave+"» puedes hacer";return"Ideas para hoy"}
-function hoyMostrar(res){if(res&&!hoy.modo)res=false;$("hoyPreg").hidden=res;$("hoyRes").hidden=!res;$("hoyTit").textContent=res?hoyTitulo():"¿Qué cocinar hoy?";if(!res)$("hoyStTxt").textContent=""}
+function hoyTitulo(){
+  if(hoy.modo==="g"){const g=HOY_G.find(x=>x[0]===hoy.clave);return g[2]?g[2]+" puedes hacer":g[1]}
+  if(hoy.modo==="t")return"Con «"+hoy.clave+"» puedes hacer";
+  if(hoy.modo==="f")return"Mis favoritas";
+  if(hoy.modo==="n")return"Recetas que no se sugieren";
+  return"Ideas para hoy";
+}
+// La tarjeta tiene tres vistas: la pregunta, las ideas y el menú de la semana
+function hoyVista(v){
+  if(v==="res"&&!hoy.modo)v="preg";
+  if(v==="menu"&&!menuActivo())v="preg";
+  hoy.vista=v;$("hoyPreg").hidden=v!=="preg";$("hoyRes").hidden=v!=="res";$("hoyMenu").hidden=v!=="menu";
+  $("hoyTit").textContent=v==="res"?hoyTitulo():v==="menu"?"Menú de la semana":"¿Qué cocinar hoy?";
+  if(v==="preg"){$("hoyStTxt").textContent="";hoyExtras()}
+  if(v==="menu")menuPintar();
+}
+// En la pregunta: la caja del menú, el botón de favoritas y el aviso de recetas ocultas
+function hoyExtras(){
+  menuCaja($("hoySemana"),true);
+  const nf=[...hoyFav].filter(n=>HOY_POR.has(n)).length;$("hoyFavs").hidden=!nf;$("hoyFavs").textContent="♥ Mis favoritas ("+nf+")";
+  const nn=[...hoyNo].filter(n=>HOY_POR.has(n)).length;$("hoyOcultas").hidden=!nn;$("hoyOcultasT").textContent=nn===1?"Hay 1 receta que pediste no sugerir.":"Hay "+nn+" recetas que pediste no sugerir.";
+  menuTile();
+}
+// Tarjeta de una idea: al tocarla se abre la receta; abajo, las tres marcas
+function hoyTarjeta(d){
+  const box=hoyEl("div","hoy-idea");
+  const pinta=()=>{
+    box.textContent="";box.classList.toggle("no",hoyNo.has(d.n));
+    if(hoyNo.has(d.n)){const u=hoyEl("button","hoy-lnk","Deshacer");u.onclick=()=>{hoyNo.delete(d.n);hoyPon("costeo.hoyNo",[...hoyNo]);pinta()};box.append(hoyEl("span","de","«"+d.n+"» ya no se va a sugerir."),u);return}
+    const b=hoyEl("button","hoy-ab"),cab=hoyEl("span","cab"),c=hoyCosto(d);
+    cab.append(hoyEl("span","nom",d.n));if(c!=null){const pr=hoyEl("span","pr","≈ "+hoyPesos(c));pr.append(hoyEl("span","pp","por persona"));cab.append(pr)}
+    b.append(hoyEl("span","niv n"+d.niv,HOY_NIV[d.niv]),cab,hoyEl("span","de",d.d));
+    if(d.ll){const l=hoyEl("span","ll");l.append(hoyEl("b",null,"Lleva: "),d.ll);b.append(l)}
+    b.append(hoyEl("span","me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")));
+    b.onclick=()=>hoyAbrir(d);
+    const acc=hoyEl("div","hoy-acc"),esFav=hoyFav.has(d.n),rec=hoyReciente(d.n),dd=rec?hoyDiasDesde(hoyHechas[d.n]):0;
+    const fav=hoyEl("button",null,(esFav?"♥":"♡")+" Me gustó");fav.setAttribute("aria-pressed",String(esFav));
+    fav.onclick=()=>{if(esFav)hoyFav.delete(d.n);else hoyFav.add(d.n);hoyPon("costeo.hoyFav",[...hoyFav]);pinta();if(!esFav)toast("Guardada en «Mis favoritas».")};
+    const he=hoyEl("button",null,rec?(dd===0?"✓ Hecha hoy":dd===1?"✓ Hecha ayer":"✓ Hecha hace "+dd+" días"):"✓ Ya la hice");he.setAttribute("aria-pressed",String(rec));
+    he.onclick=()=>{if(rec)delete hoyHechas[d.n];else{hoyHechas[d.n]=hoyFecha();toast("Anotado. No te la sugiero en dos semanas.")}hoyPon("costeo.hoyHechas",hoyHechas);pinta()};
+    const no=hoyEl("button",null,"No sugerir");no.onclick=()=>{hoyNo.add(d.n);hoyPon("costeo.hoyNo",[...hoyNo]);pinta()};
+    acc.append(fav,he,no);box.append(b,acc);
+  };
+  pinta();return box;
+}
 function hoyPintar(otras){
-  const pool=hoyPool();if(otras)hoy.ideas=hoyElegir(pool);
-  const L=$("hoyLista");L.textContent="";
-  for(const d of hoy.ideas){
-    const b=document.createElement("button");b.type="button";b.className="hoy-idea";
-    const mk=(c,t)=>{const e=document.createElement("span");e.className=c;e.textContent=t;return e};
-    const cab=mk("cab",""),c=hoyCosto(d);cab.append(mk("nom",d.n));if(c!=null){const pr=mk("pr","≈ "+hoyPesos(c));pr.append(mk("pp","por persona"));cab.append(pr)}
-    b.append(mk("niv n"+d.niv,HOY_NIV[d.niv]),cab,mk("de",d.d),mk("me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")));
-    b.onclick=()=>hoyAbrir(d);L.append(b);
-  }
-  const st=$("hoySt");st.className="status";
-  if(!pool.length){st.className="status err";const hay=hoyPool(true).length;st.textContent=hoy.mo&&hay?"No hay recetas así para "+({d:"el desayuno",c:"la comida",n:"una cena ligera"})[hoy.mo]+". Toca «A cualquier hora» para ver las "+hay+" que sí hay.":"No encontré recetas con eso. Toca «Cambiar alimento» y prueba con otra palabra."}
-  else st.textContent=pool.length===1?"Es la única receta que hay con eso.":pool.length<=4?"Son las "+pool.length+" recetas que hay con eso.":"Hay "+pool.length+" recetas posibles. Aquí van 4, de la más sencilla a la más elaborada.";
-  $("hoyOtras").hidden=pool.length<=4;$("hoyPie").hidden=!hoy.ideas.length;
+  const L=$("hoyLista"),st=$("hoySt"),oc=hoy.modo==="n",lista=oc||hoy.modo==="f";L.textContent="";st.className="status";
+  $("hoyMo").hidden=oc;$("hoyFilB").hidden=oc;$("hoyCasaB").hidden=oc;$("hoyCambiar").textContent=lista?"Regresar":"Cambiar alimento";$("hoyTit").textContent=hoyTitulo();
   for(const b of $("hoyMo").children)b.setAttribute("aria-pressed",String(b.dataset.mo===hoy.mo));
-  $("hoyTit").textContent=hoyTitulo();
+  for(const b of $("hoyFil").children){b.setAttribute("aria-pressed",String(!!hoy.fil[b.dataset.f]));b.hidden=b.dataset.f==="fav"&&hoy.modo==="f"}
+  if(oc){ // recetas que se pidió no sugerir, para recuperarlas
+    const ns=[...hoyNo].filter(n=>HOY_POR.has(n)).sort((a,b)=>a.localeCompare(b,"es"));
+    for(const n of ns){const row=hoyEl("div","hoy-idea no"),u=hoyEl("button","hoy-lnk","Volver a sugerir");u.onclick=()=>{hoyNo.delete(n);hoyPon("costeo.hoyNo",[...hoyNo]);hoyPintar(false)};row.append(hoyEl("span","de",n),u);L.append(row)}
+    st.textContent=ns.length?"Estas recetas ya no aparecen en las ideas ni en el menú. Toca «Volver a sugerir» en la que quieras recuperar.":"Ya no hay recetas ocultas.";
+    $("hoyOtras").hidden=true;$("hoyPie").hidden=true;return;
+  }
+  const pool=hoyPool();
+  if(otras)hoy.ideas=hoy.modo==="f"?pool.slice().sort((a,b)=>a.niv-b.niv||a.n.localeCompare(b.n,"es")):hoyElegir(pool);
+  for(const d of hoy.ideas)L.append(hoyTarjeta(d));
+  const filOn=HOY_FIL.some(f=>hoy.fil[f[0]]),hechas=hoyPool({hechas:false}).length-pool.length;
+  if(!pool.length){st.className="status err";
+    if(hoy.modo==="f"&&!hoyPool({mo:false,fil:false}).length)st.textContent="Todavía no tienes favoritas. Toca «♡ Me gustó» en una receta para guardarla aquí.";
+    else if(filOn&&hoyPool({fil:false}).length)st.textContent="No hay recetas así con lo que marcaste en «Solo quiero ver». Quita una marca.";
+    else if(hoy.mo&&hoyPool({mo:false,fil:false}).length)st.textContent="No hay recetas así para "+({d:"el desayuno",c:"la comida",n:"una cena ligera"})[hoy.mo]+". Toca «A cualquier hora» para ver las "+hoyPool({mo:false,fil:false}).length+" que sí hay.";
+    else if(hechas>0)st.textContent="Las recetas de este tipo ya las hiciste hace poco. Vuelven a salir en unos días.";
+    else st.textContent="No encontré recetas con eso. Toca «Cambiar alimento» y prueba con otra palabra."}
+  else{
+    st.textContent=hoy.modo==="f"?(pool.length===1?"Tienes 1 receta favorita.":"Tienes "+pool.length+" recetas favoritas."):pool.length===1?"Es la única receta que hay con eso.":pool.length<=4?"Son las "+pool.length+" recetas que hay con eso.":"Hay "+pool.length+" recetas posibles. Aquí van 4, de la más sencilla a la más elaborada.";
+    if(hoy.fil.eco&&hoy.tope!=null)st.textContent+=" Económicas: la mitad más barata, hasta "+hoyPesos(hoy.tope)+" por persona.";
+    if(hoy.fil.sinp)st.textContent+=" Sin picante: las que no llevan ningún chile.";
+    if(hechas>0)st.textContent+=hechas===1?" No aparece 1 que ya hiciste hace poco.":" No aparecen "+hechas+" que ya hiciste hace poco."}
+  $("hoyOtras").hidden=lista||pool.length<=4;$("hoyPie").hidden=!hoy.ideas.length;
 }
 function hoyArriba(){if(esTel())window.scrollTo(0,0);else $("hoyCard").scrollIntoView({behavior:"smooth",block:"start"})}
 function hoyEmpezar(modo,clave){
-  hoy.modo=modo;hoy.clave=clave;hoy.mo="";hoy.vistas=new Set();hoy.ideas=[];
+  hoy.modo=modo;hoy.clave=clave;hoy.mo="";hoy.fil={};hoy.vistas=new Set();hoy.ideas=[];
   if(modo==="t"&&!hoyPool().length){hoy.modo="";const s=$("hoyStTxt");s.className="status err";s.textContent="No encontré recetas con «"+clave+"». Prueba con otra palabra (por ejemplo, el ingrediente principal) o toca uno de los botones de arriba.";return}
-  hoyPintar(true);hoyMostrar(true);if(esTel()){try{history.pushState({p:"hoy",r:1},"")}catch{}}hoyArriba();
+  hoyPintar(true);hoyVista("res");if(esTel()){try{history.pushState({p:"hoy",r:1},"")}catch{}}hoyArriba();
 }
 // Abre la idea elegida como receta nueva, para los comensales de casa y con porción completa, ya con precios estimados.
 // No cambia los comensales ni el tipo de porción que se recuerdan para el costeo de eventos.
@@ -1333,18 +1473,112 @@ function hoyAbrir(d){conPermiso().then(ok=>{if(!ok)return;
   cargarDesdeBiblioteca(d,true);$("btnPrecios").click();
   if(esTel())ir("ingredientes");else $("ings").closest("section").scrollIntoView({behavior:"smooth",block:"start"});
 })}
+
+/* --- menú de la semana --- */
+// 5 comidas, de lunes a viernes, a partir de hoy: casi todas básicas, sin repetir el alimento principal en días seguidos
+// y evitando lo que se hizo en las últimas dos semanas. Se guarda en el teléfono junto con lo demás.
+const MENU_N=5,MENU_DIA=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],MENU_DIAL=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+let menu=(m=>m&&Array.isArray(m.d)&&m.d.length&&m.d.every(x=>x&&typeof x.f==="string"&&/^\d{4}-\d\d-\d\d$/.test(x.f)&&typeof x.n==="string")?{d:m.d,v:Array.isArray(m.v)?m.v.filter(x=>typeof x==="string"):[]}:null)(hoyLee("costeo.semana",null));
+const menuGuarda=()=>{hoyPon("costeo.semana",menu);menuTile()};
+const menuActivo=()=>!!(menu&&menu.d[menu.d.length-1].f>=hoyFecha());
+const menuDeHoy=()=>{if(!menuActivo())return null;const x=menu.d.find(x=>x.f===hoyFecha());return x&&HOY_POR.get(x.n)||null};
+// Los platillos del menú cuyo día ya pasó se dan por hechos (una sola vez), para no repetirlos en dos semanas
+function menuAsentar(){if(!menu)return;const h=hoyFecha();let c=false;for(const x of menu.d)if(x.f<h&&!x.a){x.a=1;c=true;if(HOY_POR.has(x.n)&&!(hoyHechas[x.n]>=x.f))hoyHechas[x.n]=x.f}if(c){hoyPon("costeo.hoyHechas",hoyHechas);hoyPon("costeo.semana",menu)}}
+function menuFechas(){const out=[],d=new Date();d.setHours(12,0,0,0);while(out.length<MENU_N){const w=d.getDay();if(w>=1&&w<=5)out.push(hoyFecha(d));d.setDate(d.getDate()+1)}return out}
+// Alimento principal de un platillo para variar el menú: la carne o pescado que más pesa entre sus ingredientes
+// (así unos chilaquiles con pollo cuentan como pollo); si no lleva, su primer tipo de alimento.
+const MENU_PROT=[["pollo",/pollo|pavo/],["res",/\bres\b|bistec|diezmillo|chambarete|arrachera|machaca|borrego/],["cerdo",/cerdo|tocino|chorizo|jamon|carnitas|chicharron|espinazo|cecina/],["pescado",/pescado|camaron|atun|pulpo|salmon|cazon|mojarra|jaiba|almeja|calamar/]];
+const MENU_PRAL=new Map(HOY_SUG.map(d=>{let best=null,bw=0;for(const [nom,q,u] of d.i){const k=norm(nom);if(HOY_AUX.test(k))continue;const g=u==="kg"||u==="L"?q*1000:u==="pza"?q*100:q;for(const [p,re] of MENU_PROT)if(re.test(k)&&g>bw){best=p;bw=g}}return[d,bw>=30?best:d.al[0]]}));
+const menuPral=d=>MENU_PRAL.get(d);
+// Sirven de comida fuerte: platos fuertes, sopas sustanciosas y platos de verduras con frijol, pasta o huevo; básicos o intermedios
+function menuCand(){return HOY_SUG.filter(d=>d.niv<=2&&d.mo.includes("c")&&!hoyNo.has(d.n)&&(d.t==="Plato fuerte"||(d.t==="Sopa"&&["pollo","res","cerdo","pescado","frijol"].includes(d.al[0]))||(d.t==="Verduras"&&["frijol","arroz","huevo"].includes(d.al[0]))))}
+const menuCaros=c=>new Set(c.filter(d=>{const x=hoyCosto(d);return x!=null&&x>MENU_CARO}).map(d=>d.n));
+function menuArmar(){
+  const cand=menuCand(),prev=new Set(menu?menu.d.map(x=>x.n):[]),caro=menuCaros(cand),peso=d=>(hoyReciente(d.n)?2:0)+(prev.has(d.n)?1:0)+(caro.has(d.n)?2:0);
+  let mejor=null,mp=Infinity;
+  for(let k=0;k<60;k++){
+    const orden=hoyBarajar(cand).sort((a,b)=>peso(a)-peso(b)),niv=hoyBarajar([1,1,1,1,2]),sel=[];let pen=0;
+    for(let i=0;i<MENU_N;i++){
+      // exigencia 0: nivel pedido, otro alimento que el día anterior, máximo 2 del mismo alimento y una sola sopa; después se va aflojando
+      const vale=(d,e)=>!sel.includes(d)&&(e>=3||d.niv===niv[i])&&(e>=2||!i||menuPral(sel[i-1])!==menuPral(d))&&(e>=1||(sel.filter(x=>menuPral(x)===menuPral(d)).length<2&&!(d.t==="Sopa"&&sel.some(x=>x.t==="Sopa"))));
+      let d=null;for(let e=0;e<4&&!d;e++){d=orden.find(x=>vale(x,e))||null;if(d)pen+=e*10}
+      if(!d)break;pen+=peso(d);sel.push(d);
+    }
+    if(sel.length===MENU_N&&pen<mp){mp=pen;mejor=sel;if(!pen)break}
+  }
+  if(!mejor)return false;
+  const f=menuFechas();menu={d:mejor.map((d,i)=>({f:f[i],n:d.n})),v:mejor.map(d=>d.n)};menuGuarda();return true;
+}
+function menuCambiar(i){
+  const act=menu.d.map(x=>HOY_POR.get(x.n)),en=new Set(menu.d.map(x=>x.n)),yo=act[i],vec=[act[i-1],act[i+1]].filter(Boolean).map(menuPral),sem=act.filter((x,j)=>x&&j!==i).map(menuPral);
+  const c=menuCand().filter(d=>!en.has(d.n));if(!c.length)return false;
+  let nuevos=c.filter(d=>!menu.v.includes(d.n));if(!nuevos.length){menu.v=[...en];nuevos=c}
+  const caro=menuCaros(c),pts=d=>(vec.includes(menuPral(d))?4:0)+(sem.filter(x=>x===menuPral(d)).length>=2?3:0)+(yo&&d.niv!==yo.niv?1:0)+(hoyReciente(d.n)?2:0)+(caro.has(d.n)?2:0)+(d.t==="Sopa"&&act.some((x,j)=>j!==i&&x&&x.t==="Sopa")?3:0);
+  const el=hoyBarajar(nuevos).sort((a,b)=>pts(a)-pts(b))[0];
+  menu.d[i]={f:menu.d[i].f,n:el.n};menu.v.push(el.n);menuGuarda();return true;
+}
+// Caja «Hoy toca» y, si se pide, el botón para ver o armar el menú
+function menuCaja(box,conBoton){
+  box.textContent="";const d=menuDeHoy();
+  if(d){const b=hoyEl("button","menu-hoy");b.append(hoyEl("small",null,"Hoy toca · "+MENU_DIAL[new Date().getDay()]),hoyEl("b",null,d.n),hoyEl("span",null,"Toca para ver ingredientes y pasos"));b.onclick=()=>hoyAbrir(d);box.append(b)}
+  if(!conBoton)return;
+  if(menuActivo()){const v=hoyEl("button","btn","Ver el menú de la semana");v.style.width="100%";v.onclick=menuIr;box.append(v)}
+  else{const a=hoyEl("button","menu-armar");a.append(hoyEl("b",null,menu?"Armar el menú de esta semana":"Armar el menú de la semana"),hoyEl("span",null,"5 comidas, de lunes a viernes, y una sola lista de compras"));
+    a.onclick=()=>{if(menuArmar())menuIr();else toast("No hay suficientes recetas para armar el menú.")};box.append(a)}
+}
+function menuIr(){hoyVista("menu");if(esTel()){try{history.pushState({p:"hoy",m:1},"")}catch{}}hoyArriba()}
+function menuPintar(){
+  menuAsentar();menuCaja($("menuHoy"),false);
+  const n=hoyCasa(),h=hoyFecha(),L=$("menuDias");L.textContent="";let tot=0,sin=0;
+  menu.d.forEach((x,i)=>{
+    const d=HOY_POR.get(x.n),fd=hoyDeFecha(x.f),row=hoyEl("div","menu-dia"+(x.f===h?" hoy":x.f<h?" pasado":"")),ab=hoyEl("button","menu-ab"),t=hoyEl("span","t");
+    ab.append(hoyEl("span","d",MENU_DIA[fd.getDay()]+" "+fd.getDate()),t);
+    if(d){const c=hoyCosto(d);if(c!=null)tot+=c*n;else sin++;t.append(hoyEl("b",null,d.n),hoyEl("small",null,[HOY_NIV[d.niv],hoyMin(d.min),c!=null?hoyPesos(c*n):""].filter(Boolean).join(" · ")));ab.onclick=()=>hoyAbrir(d)}
+    else{sin++;t.append(hoyEl("b",null,x.n),hoyEl("small",null,"Esta receta ya no está en la biblioteca. Toca «Cambiar»."));ab.disabled=true}
+    row.append(ab);
+    if(x.f>=h){const c=hoyEl("button","menu-cam","Cambiar");c.setAttribute("aria-label","Cambiar el platillo del "+MENU_DIAL[fd.getDay()]);c.onclick=()=>{if(menuCambiar(i))menuPintar();else toast("No hay más platillos para cambiar.")};row.append(c)}
+    L.append(row);
+  });
+  $("menuTot").textContent=hoyPesos(tot);
+  $("menuNota").textContent="Para "+n+(n===1?" persona":" personas")+", en la tienda que tienes elegida."+(sin?" Falta el precio de "+sin+(sin===1?" platillo.":" platillos."):"");
+}
+// Ingredientes de las 5 comidas, sumados, para una sola lista de compras
+function menuFilas(){
+  const n=hoyCasa(),m=new Map();
+  for(const x of menu.d){const d=HOY_POR.get(x.n);if(!d)continue;
+    for(const [nom,q,u] of d.i){const f=FACTOR[u];if(!f)continue;const k=norm(nom)+"|"+f[0],e=m.get(k)||{nombre:nom,por:f[0],cant:0};e.cant+=q*n*f[1];m.set(k,e)}}
+  return[...m.values()].map(e=>{const unidad=e.por==="kg"?"g":e.por==="L"?"ml":"pza",r=nuevaFila({nombre:e.nombre,cantidad:redondeo(e.por==="pza"?e.cant:e.cant*1000,unidad),unidad,precioPor:e.por});aplicarPrecio(r,precioEn(e.nombre,tiendaA));return r});
+}
+function menuCompras(){
+  const n=hoyCasa();
+  compraSrc={titulo:"Menú de la semana",sub:MENU_N+" comidas · "+n+(n===1?" persona":" personas"),filas:menuFilas(),clave:menu.d.map(x=>x.n).join("|")+"|"+n,
+    notas:menu.d.map(x=>{const fd=hoyDeFecha(x.f);return MENU_DIA[fd.getDay()]+" "+fd.getDate()+": "+x.n})};
+  cargarMarc();pintarCompras();$("compras").hidden=false;
+}
+// En el inicio, el botón «¿Qué cocinar hoy?» avisa lo que toca hoy según el menú
+function menuTile(){const d=menuDeHoy(),s=$("inHoy").querySelector("span");if(s)s.textContent=d?"Hoy toca: "+d.n:"Dime qué tienes y te doy 4 ideas"}
+
 (function(){
-  const G=$("hoyGrupos");for(const [k,t] of HOY_G){const b=document.createElement("button");b.type="button";b.textContent=t;b.onclick=()=>hoyEmpezar("g",k);G.append(b)}
-  const M=$("hoyMo");for(const [k,t] of HOY_MO){const b=document.createElement("button");b.type="button";b.dataset.mo=k;b.textContent=t;b.setAttribute("aria-pressed","false");b.onclick=()=>{hoy.mo=k;hoy.vistas=new Set();hoyPintar(true)};M.append(b)}
+  const G=$("hoyGrupos");for(const [k,t] of HOY_G){const b=hoyEl("button",null,t);b.onclick=()=>hoyEmpezar("g",k);G.append(b)}
+  const M=$("hoyMo");for(const [k,t] of HOY_MO){const b=hoyEl("button",null,t);b.dataset.mo=k;b.setAttribute("aria-pressed","false");b.onclick=()=>{hoy.mo=k;hoy.vistas=new Set();hoyPintar(true)};M.append(b)}
+  const F=$("hoyFil");for(const [k,t] of HOY_FIL){const b=hoyEl("button",null,t);b.dataset.f=k;b.setAttribute("aria-pressed","false");b.onclick=()=>{hoy.fil[k]=!hoy.fil[k];hoy.vistas=new Set();hoyPintar(true)};F.append(b)}
   $("hoyForm").addEventListener("submit",e=>{e.preventDefault();const t=$("hoyTxt").value.trim();if(!hoyTokens(t).length){const s=$("hoyStTxt");s.className="status err";s.textContent="Escribe un ingrediente, por ejemplo «nopales» o «atún».";$("hoyTxt").focus();return}$("hoyTxt").blur();hoyEmpezar("t",t)});
   $("hoySorpresa").onclick=()=>hoyEmpezar("s","");
+  $("hoyFavs").onclick=()=>hoyEmpezar("f","");
+  $("hoyOcultasVer").onclick=()=>hoyEmpezar("n","");
   $("hoyOtras").onclick=()=>{hoyPintar(true);hoyArriba()};
-  $("hoyCambiar").onclick=()=>{if(esTel()&&history.state&&history.state.r){history.back();return}hoyMostrar(false);hoyArriba()};
-  $("hoyMenos").onclick=()=>hoyCasaPon(hoyCasa()-1);$("hoyMas").onclick=()=>hoyCasaPon(hoyCasa()+1);hoyCasaPon(hoyCasa());
-  const abrir=()=>{cerrarPaneles();hoyMostrar(false);$("hoyCard").hidden=false};
+  const aPregunta=k=>{if(esTel()&&history.state&&history.state[k]){history.back();return}hoyVista("preg");hoyArriba()};
+  $("hoyCambiar").onclick=()=>aPregunta("r");
+  $("menuBuscar").onclick=()=>aPregunta("m");
+  $("hoyMenos").onclick=$("menuMenos").onclick=()=>hoyCasaPon(hoyCasa()-1);$("hoyMas").onclick=$("menuMas").onclick=()=>hoyCasaPon(hoyCasa()+1);hoyCasaPon(hoyCasa());
+  $("menuCompras").onclick=menuCompras;
+  $("menuOtro").onclick=()=>preguntar("¿Armar otro menú?","Se cambian los 5 platillos por otros distintos.",[["si","Sí, armar otro","primary"],["no","Dejarlo como está"]]).then(v=>{if(v!=="si")return;if(menuArmar()){menuPintar();hoyArriba()}else toast("No hay suficientes recetas para armar el menú.")});
+  const abrir=()=>{cerrarPaneles();hoyVista("preg");$("hoyCard").hidden=false};
   $("inHoy").onclick=()=>{abrir();ir("hoy")};
   $("btnHoy").onclick=()=>{const h=$("hoyCard").hidden;cerrarPaneles();if(!h)return;abrir();hoyArriba()};
   $("btnHoyCerrar").onclick=()=>{$("hoyCard").hidden=true;if(esTel())ir("inicio")};
+  menuAsentar();menuTile();
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)return;menuAsentar();menuTile();if(hoy.vista==="preg")hoyExtras();else if(hoy.vista==="menu")hoyVista("menu")});
 })();
 
 /* ---------- guía de siguiente paso y barra fija ---------- */
@@ -1418,7 +1652,7 @@ $("btnConsejos").onclick=()=>{const l=$("consejosList");l.hidden=!l.hidden;const
 $("fechaRef").textContent=BASE.FECHA||"";$("fechaRef2").textContent=BASE.FECHA||"";
 cargar();const habiaBorrador=restaurarBorrador();renderDatalist();renderForm();renderLista();guia();ir($("ayudaCard").hidden?"inicio":"ayuda");
 try{history.replaceState({p:document.body.dataset.p},"")}catch{}
-window.addEventListener("popstate",e=>{if(cerrarCapas()){try{history.pushState({p:document.body.dataset.p},"")}catch{}return}if(!esTel())return;ir(e.state&&e.state.p||"inicio",true);if(e.state&&e.state.p==="hoy")hoyMostrar(!!e.state.r)});
+window.addEventListener("popstate",e=>{if(cerrarCapas()){try{history.pushState({p:document.body.dataset.p},"")}catch{}return}if(!esTel())return;ir(e.state&&e.state.p||"inicio",true);if(e.state&&e.state.p==="hoy")hoyVista(e.state.m?"menu":e.state.r?"res":"preg")});
 if(habiaBorrador)setTimeout(()=>toast("Recuperé lo que estabas haciendo"+(actual.titulo.trim()?": «"+actual.titulo.trim()+"»":"")+"."),400);
 /* app instalable: solo cuando se abre desde internet (https). Con señal, sw.js siempre trae primero la versión más nueva. */
 if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{})}

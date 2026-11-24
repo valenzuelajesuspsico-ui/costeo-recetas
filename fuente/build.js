@@ -58,6 +58,8 @@ const AL=["pollo","res","cerdo","pescado","verduras","huevo","frijol","arroz","m
 const PESO={"Laurel":0.3,"Queso de cabra":100,"Frijol":1,"Perejil":50,"Cilantro":50,"Hierbabuena":50,"Albahaca":50,"Romero":30,"Tomillo":30,"Lechuga romana":400,"Espinaca":250,"Rábano":15,"Elote":150,"Baguette":250,"Flor de calabaza":80,"Epazote":50,"Salvia fresca":40,"Cebolla cambray":15,"Zacate limón":40,"Piña":1200,"Coco":600,"Huevo":50,"Vaina de vainilla":3,"Limón":60,"Té (caja)":50};
 for(const d of BASE.RECETAS)d.i=d.i.map(([n,q,u])=>{const p=BASE.PRECIOS.find(p=>p[0].toLowerCase()==n.toLowerCase());if(!p)return[n,q,u];const por={g:"kg",kg:"kg",ml:"L",L:"L",pza:"pza"}[u];if(p[2]===por)return[n,q,u];const w=PESO[n]||50;
   if(p[2]==="kg"&&u==="ml")return[n,q,"g"];if(p[2]==="L"&&u==="g")return[n,q,"ml"];if(p[2]==="kg"&&u==="pza")return[n,+(q*w).toFixed(2),"g"];if(p[2]==="pza"&&(u==="g"||u==="ml"))return[n,+(q/w).toFixed(2),"pza"];if(p[2]==="L"&&u==="pza")return[n,+(q*w).toFixed(2),"ml"];return[n,q,u]});
+// «Lleva: …» para las tarjetas de ideas (libro/lleva.js): se calcula con las unidades ya ajustadas
+{const lleva=require("./libro/lleva.js");for(const d of BASE.RECETAS){if(!d.niv)continue;d.ll=lleva(d,PESO);if(!d.ll)throw new Error("Sin «Lleva» para "+d.n)}}
 // Consejos de Cocinología para todas las recetas
 for(const d of BASE.RECETAS){
   const text=d.n;const temas=[];
