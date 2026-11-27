@@ -13,6 +13,7 @@ App: https://valenzuelajesuspsico-ui.github.io/costeo-recetas/
   - `plantilla.html`: diseño y programa de la app.
   - `base.js`, `libro/`, `seed/`: recetas, consejos, tiendas y precios base.
     - `libro/diario_a.js`, `libro/diario_b.js`, `libro/diario_c.js`: recetas de diario, básicas e intermedias (Larousse Cocina, México Desconocido y Profeco).
+    - `libro/limpia.js`: limpia paladares (sorbetes, granizados, encurtido, infusiones…). Cada uno dice cuándo se sirve (`cu`) y para qué alimentos conviene (`pa`); la app lo muestra en la receta, en las tarjetas y en la hoja.
     - `libro/ripert_pasos.js`: las 25 recetas de verduras más sencillas, revisadas a mano.
     - `libro/clasif.js`: nivel, tiempo, tipo de alimento y momento del día de cada receta, para «¿Qué cocinar hoy?». Solo se sugieren las recetas clasificadas.
     - `libro/descripciones.js`: descripciones que explican de qué trata cada platillo.

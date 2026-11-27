@@ -64,3 +64,6 @@ module.exports.PRECIOS.push(
 module.exports.FUENTES.profeco={titulo:"Revista del Consumidor, sección Platillo Sabio",autor:"Profeco (Platillo Sabio)"};
 module.exports.RECETAS.push(...require("./diario_c.js"));
 module.exports.PRECIOS.push(["Chile costeño",280,"kg","mercado"],["Germinado de soya",40,"kg","walmart"],["Salchicha",95,"kg","calimax"]);
+// Limpia paladares (libro/limpia.js): qué servir entre platillos, cuándo y con qué alimentos
+module.exports.RECETAS.push(...require("./limpia.js"));
+module.exports.PRECIOS.push(["Manzana verde",54,"kg","walmart"],["Tuna roja",40,"kg","mercado"],["Vinagre de arroz",90,"L","walmart"],["Té verde (caja)",28,"pza","walmart"]);

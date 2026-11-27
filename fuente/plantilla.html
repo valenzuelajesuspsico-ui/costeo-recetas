@@ -426,6 +426,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
         <p class="status" id="hoyStTxt" style="margin:8px 0 0"></p>
         <button class="btn" type="button" id="hoySorpresa" style="margin-top:12px;width:100%;color:var(--accent);font-weight:600">Sorpréndeme</button>
         <button class="btn" type="button" id="hoyFavs" style="margin-top:10px;width:100%" hidden>♥ Mis favoritas</button>
+        <button class="btn" type="button" id="hoyLimpia" style="margin-top:10px;width:100%">Limpia paladares: qué servir entre platillos</button>
         <p class="note" id="hoyOcultas" style="margin-top:12px" hidden><span id="hoyOcultasT"></span> <button type="button" class="hoy-lnk" id="hoyOcultasVer">Ver y recuperar</button></p>
       </div>
       <div id="hoyRes" hidden>
@@ -531,6 +532,7 @@ textarea{font:inherit;color:inherit;background:var(--panel);border:1px solid var
 
     <section class="card" id="pasosCard">
       <div class="paso-h"><span class="num">3</span><h2>Preparación</h2></div>
+      <div id="usoReceta" hidden style="margin:0 0 12px;font-size:14.5px;line-height:1.45"></div>
       <p class="note" id="notaReceta" hidden style="margin:0 0 12px;font-size:14px"></p>
       <ol id="pasosList"></ol>
       <p class="note" id="pasosVacio"></p>
@@ -650,10 +652,11 @@ function idbDel(k){try{idb&&idb.transaction("fotos","readwrite").objectStore("fo
 let actual=vacia();
 let dirty=false,editada=false;
 
-function vacia(){const p=predet();return{id:null,titulo:"",porciones:p.n,tipo:p.t,imprevistos:10,ingredientes:[],consejos:[],pasos:[],notas:"",fuente:"",nota:""}}
-function fuenteDe(d){if(d.f&&BASE.LIBROS&&BASE.LIBROS[d.f]){const L=BASE.LIBROS[d.f];if(d.u)return `${L.autor} (${d.u}); cantidades convertidas a porciones y pasos redactados para esta app`;return `${L.autor}, «${L.titulo}», p. ${d.p}`}return ""}
+function vacia(){const p=predet();return{id:null,titulo:"",porciones:p.n,tipo:p.t,imprevistos:10,ingredientes:[],consejos:[],pasos:[],notas:"",fuente:"",nota:"",cuando:"",para:""}}
+function fuenteDe(d){if(d.fx)return d.fx;if(d.f&&BASE.LIBROS&&BASE.LIBROS[d.f]){const L=BASE.LIBROS[d.f];if(d.u)return `${L.autor} (${d.u}); cantidades convertidas a porciones y pasos redactados para esta app`;return `${L.autor}, «${L.titulo}», p. ${d.p}`}return ""}
 // Nota sobre la receta (para cuántas porciones es la original, de dónde salen las cantidades, avisos).
 // Las recetas guardadas antes de que existiera esta nota la toman de la biblioteca si el nombre coincide.
+const USO=(cu,pa)=>[["Cuándo se sirve: ",cu],["Conviene para: ",pa]].filter(x=>x[1]);
 function notaDeReceta(){if(actual.nota)return actual.nota;if(!actual.fuente||!actual.titulo)return"";const t=norm(actual.titulo),d=BASE.RECETAS.find(x=>norm(x.n)===t);return d&&d.r?d.r:""}
 function pintarPasos(){
   if(!(actual.pasos||[]).length&&actual.titulo){const t=norm(actual.titulo);const d=BASE.RECETAS.find(d=>t.includes(norm(d.n)));if(d){actual.pasos=d.s||[];if(!(actual.consejos||[]).length)actual.consejos=d.c||[];if(!actual.fuente)actual.fuente=fuenteDe(d)}}
@@ -661,6 +664,8 @@ function pintarPasos(){
   const v=$("pasosVacio");v.hidden=!!(actual.pasos||[]).length;v.textContent=actual.fuente?"Los pasos detallados de esta receta están en el libro (mira la fuente más abajo). Aquí puedes anotar cómo la preparas tú.":"Esta receta todavía no tiene pasos. Anota abajo cómo la preparas y se guardan con ella.";
   $("notas").value=actual.notas||"";
   {const nt=notaDeReceta(),nr=$("notaReceta");nr.hidden=!nt;nr.textContent=nt?"Sobre esta receta: "+nt:""}
+  // Limpia paladares: cuándo se sirve y para qué alimentos conviene
+  {const u=$("usoReceta");u.textContent="";for(const [t,v] of USO(actual.cuando,actual.para)){const q=document.createElement("p"),b=document.createElement("b");q.style.margin="0 0 4px";b.textContent=t;q.append(b,v);u.append(q)}u.hidden=!u.children.length}
   const L=$("pasosLinks");L.textContent="";const t=(actual.titulo||"").replace(/^Tierra y Maíz · (\d+\. )?/,"").trim();
   if(t){const g=s=>"https://www.google.com/search?q="+encodeURIComponent("receta "+t+(s?" site:"+s:""));for(const [lbl,url] of [["Larousse Cocina",g("laroussecocina.mx")],["México Desconocido",g("mexicodesconocido.com.mx")],["Gobierno de México",g("gob.mx")],["Videos en YouTube","https://www.youtube.com/results?search_query="+encodeURIComponent("receta "+t)]]){const a=document.createElement("a");a.className="lnk";a.textContent=lbl;a.href=url;a.target="_blank";a.rel="noopener";L.append(a)}}
   L.previousElementSibling.hidden=!t;
@@ -858,7 +863,7 @@ function cargarDesdeBiblioteca(d,otra){
   else if(!actual.titulo.trim()){actual.titulo=d.n;$("titulo").value=d.n}
   soltarSiOtra();
   actual.ingredientes=d.i.map(([nombre,cant,unidad])=>nuevaFila({nombre,cantidad:escalar(cant,unidad,n,tipo),unidad,precioPor:FACTOR[unidad][0]}));
-  actual.consejos=d.c||[];actual.pasos=d.s||[];actual.fuente=fuenteDe(d);actual.nota=d.r||"";quitarAvisoEscala();renderConsejos();
+  actual.consejos=d.c||[];actual.pasos=d.s||[];actual.fuente=fuenteDe(d);actual.nota=d.r||"";actual.cuando=d.cu||"";actual.para=d.pa||"";quitarAvisoEscala();renderConsejos();
   dirty=true;editada=false;$("sugs").hidden=true;renderTabla();$("stSug").className="status";$("stSug").textContent=`Cantidades para ${n} comensales (porción ${tipo}). Ahora toca «Estimar precios».`;
 }
 function cargarDesdeGuardada(r){
@@ -866,7 +871,7 @@ function cargarDesdeGuardada(r){
   if(!actual.titulo.trim()){actual.titulo=r.titulo;$("titulo").value=r.titulo}
   if(actual.id!==r.id)soltarSiOtra();
   actual.ingredientes=(r.ingredientes||[]).map(x=>nuevaFila({...x,cantidad:x.cantidad===""?"":+(Number(x.cantidad)*f).toPrecision(3)}));
-  actual.consejos=r.consejos||[];actual.pasos=r.pasos||[];actual.notas=r.notas||"";actual.fuente=r.fuente||"";actual.nota=r.nota||"";quitarAvisoEscala();renderConsejos();
+  actual.consejos=r.consejos||[];actual.pasos=r.pasos||[];actual.notas=r.notas||"";actual.fuente=r.fuente||"";actual.nota=r.nota||"";actual.cuando=r.cuando||"";actual.para=r.para||"";quitarAvisoEscala();renderConsejos();
   dirty=true;editada=false;$("sugs").hidden=true;renderTabla();$("stSug").className="status";$("stSug").textContent=`Copiado de «${r.titulo}» y escalado de ${r.porciones} a ${actual.porciones} comensales.`;
 }
 $("btnSugerir").onclick=()=>{
@@ -887,7 +892,7 @@ $("btnSugerir").onclick=()=>{
     const d=x.tipo==="biblioteca"?x.d:null,cab=hoyEl("div","cab");cab.append(h);
     if(d){const c=hoyCosto(d);if(c!=null){const pr=hoyEl("span","pr","≈ "+hoyPesos(c));pr.append(hoyEl("span","pp","por persona"));cab.append(pr)}}
     card.append(tag);if(d&&d.niv)card.append(hoyEl("span","niv n"+d.niv,HOY_NIV[d.niv]));card.append(cab,p);
-    if(d&&d.ll){const l=hoyEl("p","ll");l.append(hoyEl("b",null,"Lleva: "),d.ll);card.append(l,hoyEl("p","me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")))}else card.append(ul);
+    if(d&&d.ll){const l=hoyEl("p","ll");l.append(hoyEl("b",null,"Lleva: "),d.ll);card.append(l);for(const [t,v] of USO(d.cu,d.pa)){const q=hoyEl("p","ll");q.append(hoyEl("b",null,t),v);card.append(q)}card.append(hoyEl("p","me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")))}else card.append(ul);
     card.append(b);box.append(card);
   }
   box.hidden=false;$("stSug").textContent="Elige una versión; las cantidades se calculan para los comensales indicados.";
@@ -897,7 +902,7 @@ let limpiarBib=()=>{};
 (function(){
   const sel=$("biblioteca"),reg=$("bibRegion"),bus=$("bibBuscar"),res=$("bibRes");
   for(const g of BASE.REGIONES||[]){const o=document.createElement("option");o.value=g;o.textContent=g;reg.append(o)}
-  const idxN=BASE.RECETAS.map(d=>norm(d.n)),idxD=BASE.RECETAS.map(d=>norm([d.n,d.k,d.d,d.g,d.t].join(" "))),idx=BASE.RECETAS.map((d,i)=>idxD[i]+" "+norm(d.i.map(x=>x[0]).join(" ")));
+  const idxN=BASE.RECETAS.map(d=>norm(d.n)),idxD=BASE.RECETAS.map(d=>norm([d.n,d.k,d.d,d.g,d.t,d.cu,d.pa].join(" "))),idx=BASE.RECETAS.map((d,i)=>idxD[i]+" "+norm(d.i.map(x=>x[0]).join(" ")));
   function filtrar(){const g=reg.value,q=norm(bus.value).split(/\s+/).filter(t=>t.length>=2);const out=[];BASE.RECETAS.forEach((d,i)=>{if(g&&d.g!==g)return;if(q.length&&!q.every(t=>idx[i].includes(t)))return;out.push(i)});
     if(q.length){const nivel=i=>q.every(t=>idxN[i].includes(t))?0:q.every(t=>idxD[i].includes(t))?1:2;out.sort((a,b)=>nivel(a)-nivel(b)||a-b)}return out}
   function pintar(){
@@ -921,7 +926,7 @@ $("btnEscalarNo").onclick=()=>{$("escalarRow").hidden=true};
 $("btnEscalarOk").onclick=()=>{const de=parseFloat($("escalaDe").value),a=parseFloat($("escalaA").value);if(!(de>0)||!(a>0))return;const f=a/de;for(const r of actual.ingredientes){const q=parseFloat(r.cantidad);if(q>=0)r.cantidad=+(q*f).toPrecision(4)}actual.porciones=Math.round(a);$("porciones").value=actual.porciones;dirty=true;editada=true;quitarAvisoEscala();$("escalarRow").hidden=true;renderTabla();toast(`Cantidades escaladas de ${de} a ${a} comensales.`)};
 
 /* ---------- guardar, abrir, borrar, duplicar ---------- */
-function snapshot(){return{id:actual.id,titulo:actual.titulo,porciones:actual.porciones,tipo:actual.tipo,imprevistos:actual.imprevistos,ingredientes:actual.ingredientes.map(r=>({...r})),consejos:[...(actual.consejos||[])],pasos:[...(actual.pasos||[])],notas:actual.notas||"",fuente:actual.fuente||"",nota:actual.nota||"",updatedAt:Date.now()}}
+function snapshot(){return{id:actual.id,titulo:actual.titulo,porciones:actual.porciones,tipo:actual.tipo,imprevistos:actual.imprevistos,ingredientes:actual.ingredientes.map(r=>({...r})),consejos:[...(actual.consejos||[])],pasos:[...(actual.pasos||[])],notas:actual.notas||"",fuente:actual.fuente||"",nota:actual.nota||"",cuando:actual.cuando||"",para:actual.para||"",updatedAt:Date.now()}}
 $("btnGuardar").onclick=()=>{
   if(!actual.titulo.trim()){$("stSave").className="status err";$("stSave").textContent="Ponle título a la receta.";$("titulo").focus();return}
   let aviso="Receta guardada.";
@@ -936,7 +941,7 @@ $("btnDuplicar").onclick=()=>{actual=snapshot();actual.id=null;actual.titulo+=" 
 function nueva(){actual=vacia();dirty=false;editada=false;limpiarBib();renderForm();renderLista();window.scrollTo({top:0,behavior:"smooth"});$("titulo").focus()}
 $("btnNueva").onclick=nueva;
 $("lista").addEventListener("click",e=>{const id=e.target.closest("[data-open]")?.dataset.open;if(!id)return;const r=recetas.find(x=>x.id===id);if(!r)return;
-  actual={id,titulo:r.titulo||"",porciones:r.porciones||60,tipo:r.tipo||"degustación",imprevistos:r.imprevistos??10,ingredientes:(r.ingredientes||[]).map(nuevaFila),consejos:r.consejos||[],pasos:r.pasos||[],notas:r.notas||"",fuente:r.fuente||"",nota:r.nota||""};
+  actual={id,titulo:r.titulo||"",porciones:r.porciones||60,tipo:r.tipo||"degustación",imprevistos:r.imprevistos??10,ingredientes:(r.ingredientes||[]).map(nuevaFila),consejos:r.consejos||[],pasos:r.pasos||[],notas:r.notas||"",fuente:r.fuente||"",nota:r.nota||"",cuando:r.cuando||"",para:r.para||""};
   dirty=false;editada=false;renderForm();renderLista();$("aside").classList.remove("open");window.scrollTo({top:0,behavior:"smooth"})});
 $("btnSide").onclick=()=>$("aside").classList.toggle("open");
 
@@ -944,6 +949,7 @@ $("btnSide").onclick=()=>$("aside").classList.toggle("open");
 function resumenTexto(){
   const L=[`${actual.titulo||"Receta"} — ${actual.porciones} comensales (${actual.tipo})`,""];
   for(const r of actual.ingredientes){const c=costo(r);L.push(`${r.nombre}\t${cantTxt(r.cantidad,r.unidad)}\t${r.precio!==""?mxn(r.precio)+"/"+r.precioPor:"—"}\t${c&&!Number.isNaN(c)?mxn(c):"—"}\t${r.tienda||""}`)}
+  {const u=USO(actual.cuando,actual.para);if(u.length){L.push("");for(const [t,v] of u)L.push(t+v)}}
   if(actual.fuente)L.push("","Fuente: "+actual.fuente);if((actual.consejos||[]).length){L.push("","Recuerda:");for(const c of actual.consejos)L.push("- "+c)}
   L.push("",`Insumos: ${$("tSub").textContent}`,`Imprevistos ${actual.imprevistos}%: ${$("tImp").textContent}`,`Total: ${$("tTot").textContent}`,`Por comensal: ${$("tPor").textContent}`);
   return L.join("\n");
@@ -1033,6 +1039,7 @@ $("btnPDF").onclick=()=>{
   const bd=E("tbody");for(const f of d.filas){const r=E("tr");r.append(E("td",f.n),E("td",f.q,"n"),E("td",f.pu,"n"),E("td",f.a!=null?mxn(f.a):"—","n"));if(d.Bn)r.append(E("td",f.b!=null?mxn(f.b):"—","n"));bd.append(r)}tb.append(bd);
   const ft=E("tfoot");const fila=(l,a,b,c)=>{const r=E("tr",null,c);const td=E("td",l);td.colSpan=3;r.append(td,E("td",a,"n"));if(d.Bn)r.append(E("td",b,"n"));ft.append(r)};
   fila("Insumos",mxn(d.sub),d.B?mxn(d.B.tot/(1+(actual.imprevistos||0)/100)):"");fila("Imprevistos "+(actual.imprevistos||0)+" %",mxn(d.imp),"");fila("Total",mxn(d.tot),d.B?mxn(d.B.tot):"","gran");fila("Por comensal",mxn(d.por),d.B?mxn(d.B.tot/d.n):"");tb.append(ft);h.append(tb);
+  for(const [t,v] of USO(actual.cuando,actual.para))h.append(E("p",t+v,"meta"));
   if((actual.pasos||[]).length){h.append(E("p","Preparación:","meta"));const ol=E("ol");for(const s of actual.pasos)ol.append(E("li",s));h.append(ol)}{const nt=notaDeReceta();if(nt)h.append(E("p","Sobre esta receta: "+nt,"meta"))}if(actual.notas)h.append(E("p","Notas: "+actual.notas,"meta"));if((actual.consejos||[]).length){h.append(E("p","Recuerda:","meta"));const ul=E("ul");for(const c of actual.consejos)ul.append(E("li",c));h.append(ul)}
   if(conLogo()){const f=E("div","","firma"),im=new Image();im.src=LOGO;f.append(im);if(d.autor){const t=E("div");t.append(E("small","Elaborado por"),E("b",d.autor));f.append(t)}h.append(f)}
   h.append(E("p",(actual.fuente?"Fuente de la receta: "+actual.fuente+". ":"")+"Precios de referencia estimados para Tijuana, B.C. ("+(BASE.FECHA||"")+"). Pueden variar según la tienda y el día; confirma antes de comprar.","pie"));
@@ -1258,7 +1265,7 @@ function restaurarBorrador(){
   const ing=Array.isArray(a.ingredientes)?a.ingredientes.map(nuevaFila):[];
   if(!String(a.titulo||"").trim()&&!ing.some(r=>r.nombre.trim()))return false;
   const p=predet();
-  actual={id:a.id&&recetas.some(x=>x.id===a.id)?a.id:null,titulo:String(a.titulo||""),porciones:parseInt(a.porciones)>0?parseInt(a.porciones):p.n,tipo:a.tipo==="completa"?"completa":"degustación",imprevistos:Number(a.imprevistos)>=0?Number(a.imprevistos):10,ingredientes:ing,consejos:Array.isArray(a.consejos)?a.consejos:[],pasos:Array.isArray(a.pasos)?a.pasos:[],notas:String(a.notas||""),fuente:String(a.fuente||""),nota:String(a.nota||"")};
+  actual={id:a.id&&recetas.some(x=>x.id===a.id)?a.id:null,titulo:String(a.titulo||""),porciones:parseInt(a.porciones)>0?parseInt(a.porciones):p.n,tipo:a.tipo==="completa"?"completa":"degustación",imprevistos:Number(a.imprevistos)>=0?Number(a.imprevistos):10,ingredientes:ing,consejos:Array.isArray(a.consejos)?a.consejos:[],pasos:Array.isArray(a.pasos)?a.pasos:[],notas:String(a.notas||""),fuente:String(a.fuente||""),nota:String(a.nota||""),cuando:String(a.cuando||""),para:String(a.para||"")};
   dirty=true;editada=!!b.editada;borradorRecuperado=true;return true;
 }
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){clearTimeout(tBorr);guardarBorrador()}});
@@ -1353,6 +1360,7 @@ function hoyPool(o={}){
   if(hoy.modo==="g")p=HOY_SUG.filter(d=>d.al.includes(hoy.clave));
   else if(hoy.modo==="t"){const tk=hoyTokens(hoy.clave).map(hoyVariantes);p=HOY_SUG.filter(d=>{const x=HOY_IDX.get(d);return tk.every(v=>v.some(w=>x.has(w)))})}
   else if(hoy.modo==="f")p=HOY_SUG.filter(d=>hoyFav.has(d.n));
+  else if(hoy.modo==="l")p=HOY_SUG.filter(d=>d.t==="Limpia paladar");
   else p=HOY_SUG.filter(d=>d.al.some(a=>!["postres","bebidas","salsas"].includes(a)));
   p=p.filter(d=>!hoyNo.has(d.n));
   if(o.mo!==false&&hoy.mo)p=p.filter(d=>d.mo.includes(hoy.mo));
@@ -1392,6 +1400,7 @@ function hoyTitulo(){
   if(hoy.modo==="g"){const g=HOY_G.find(x=>x[0]===hoy.clave);return g[2]?g[2]+" puedes hacer":g[1]}
   if(hoy.modo==="t")return"Con «"+hoy.clave+"» puedes hacer";
   if(hoy.modo==="f")return"Mis favoritas";
+  if(hoy.modo==="l")return"Limpia paladares";
   if(hoy.modo==="n")return"Recetas que no se sugieren";
   return"Ideas para hoy";
 }
@@ -1421,6 +1430,7 @@ function hoyTarjeta(d){
     cab.append(hoyEl("span","nom",d.n));if(c!=null){const pr=hoyEl("span","pr","≈ "+hoyPesos(c));pr.append(hoyEl("span","pp","por persona"));cab.append(pr)}
     b.append(hoyEl("span","niv n"+d.niv,HOY_NIV[d.niv]),cab,hoyEl("span","de",d.d));
     if(d.ll){const l=hoyEl("span","ll");l.append(hoyEl("b",null,"Lleva: "),d.ll);b.append(l)}
+    for(const [t,v] of USO(d.cu,d.pa)){const l=hoyEl("span","ll");l.append(hoyEl("b",null,t),v);b.append(l)}
     b.append(hoyEl("span","me",["≈ "+hoyMin(d.min),d.i.length+" ingredientes",d.g||""].filter(Boolean).join(" · ")));
     b.onclick=()=>hoyAbrir(d);
     const acc=hoyEl("div","hoy-acc"),esFav=hoyFav.has(d.n),rec=hoyReciente(d.n),dd=rec?hoyDiasDesde(hoyHechas[d.n]):0;
@@ -1434,8 +1444,8 @@ function hoyTarjeta(d){
   pinta();return box;
 }
 function hoyPintar(otras){
-  const L=$("hoyLista"),st=$("hoySt"),oc=hoy.modo==="n",lista=oc||hoy.modo==="f";L.textContent="";st.className="status";
-  $("hoyMo").hidden=oc;$("hoyFilB").hidden=oc;$("hoyCasaB").hidden=oc;$("hoyCambiar").textContent=lista?"Regresar":"Cambiar alimento";$("hoyTit").textContent=hoyTitulo();
+  const L=$("hoyLista"),st=$("hoySt"),oc=hoy.modo==="n",lp=hoy.modo==="l",lista=oc||lp||hoy.modo==="f";L.textContent="";st.className="status";
+  $("hoyMo").hidden=oc||lp;$("hoyFilB").hidden=oc;$("hoyCasaB").hidden=oc;$("hoyCambiar").textContent=lista?"Regresar":"Cambiar alimento";$("hoyTit").textContent=hoyTitulo();
   for(const b of $("hoyMo").children)b.setAttribute("aria-pressed",String(b.dataset.mo===hoy.mo));
   for(const b of $("hoyFil").children){b.setAttribute("aria-pressed",String(!!hoy.fil[b.dataset.f]));b.hidden=b.dataset.f==="fav"&&hoy.modo==="f"}
   if(oc){ // recetas que se pidió no sugerir, para recuperarlas
@@ -1445,7 +1455,7 @@ function hoyPintar(otras){
     $("hoyOtras").hidden=true;$("hoyPie").hidden=true;return;
   }
   const pool=hoyPool();
-  if(otras)hoy.ideas=hoy.modo==="f"?pool.slice().sort((a,b)=>a.niv-b.niv||a.n.localeCompare(b.n,"es")):hoyElegir(pool);
+  if(otras)hoy.ideas=hoy.modo==="f"?pool.slice().sort((a,b)=>a.niv-b.niv||a.n.localeCompare(b.n,"es")):lp?pool.slice():hoyElegir(pool);
   for(const d of hoy.ideas)L.append(hoyTarjeta(d));
   const filOn=HOY_FIL.some(f=>hoy.fil[f[0]]),hechas=hoyPool({hechas:false}).length-pool.length;
   if(!pool.length){st.className="status err";
@@ -1455,7 +1465,7 @@ function hoyPintar(otras){
     else if(hechas>0)st.textContent="Las recetas de este tipo ya las hiciste hace poco. Vuelven a salir en unos días.";
     else st.textContent="No encontré recetas con eso. Toca «Cambiar alimento» y prueba con otra palabra."}
   else{
-    st.textContent=hoy.modo==="f"?(pool.length===1?"Tienes 1 receta favorita.":"Tienes "+pool.length+" recetas favoritas."):pool.length===1?"Es la única receta que hay con eso.":pool.length<=4?"Son las "+pool.length+" recetas que hay con eso.":"Hay "+pool.length+" recetas posibles. Aquí van 4, de la más sencilla a la más elaborada.";
+    st.textContent=lp?"Un limpia paladar es un bocado o un sorbo pequeño que quita de la boca el sabor del platillo anterior, para probar bien el que sigue. Cada tarjeta dice cuándo se sirve y para qué alimentos conviene.":hoy.modo==="f"?(pool.length===1?"Tienes 1 receta favorita.":"Tienes "+pool.length+" recetas favoritas."):pool.length===1?"Es la única receta que hay con eso.":pool.length<=4?"Son las "+pool.length+" recetas que hay con eso.":"Hay "+pool.length+" recetas posibles. Aquí van 4, de la más sencilla a la más elaborada.";
     if(hoy.fil.eco&&hoy.tope!=null)st.textContent+=" Económicas: la mitad más barata, hasta "+hoyPesos(hoy.tope)+" por persona.";
     if(hoy.fil.sinp)st.textContent+=" Sin picante: las que no llevan ningún chile.";
     if(hechas>0)st.textContent+=hechas===1?" No aparece 1 que ya hiciste hace poco.":" No aparecen "+hechas+" que ya hiciste hace poco."}
@@ -1566,6 +1576,7 @@ function menuTile(){const d=menuDeHoy(),s=$("inHoy").querySelector("span");if(s)
   $("hoyForm").addEventListener("submit",e=>{e.preventDefault();const t=$("hoyTxt").value.trim();if(!hoyTokens(t).length){const s=$("hoyStTxt");s.className="status err";s.textContent="Escribe un ingrediente, por ejemplo «nopales» o «atún».";$("hoyTxt").focus();return}$("hoyTxt").blur();hoyEmpezar("t",t)});
   $("hoySorpresa").onclick=()=>hoyEmpezar("s","");
   $("hoyFavs").onclick=()=>hoyEmpezar("f","");
+  $("hoyLimpia").onclick=()=>hoyEmpezar("l","");
   $("hoyOcultasVer").onclick=()=>hoyEmpezar("n","");
   $("hoyOtras").onclick=()=>{hoyPintar(true);hoyArriba()};
   const aPregunta=k=>{if(esTel()&&history.state&&history.state[k]){history.back();return}hoyVista("preg");hoyArriba()};

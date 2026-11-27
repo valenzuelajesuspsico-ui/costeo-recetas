@@ -4,9 +4,9 @@
 const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").trim().toLowerCase();
 
 // No se mencionan
-const FUERA=/^(sal|aceite .*|consome de pollo en polvo|pimienta .*|laurel|oregano|comino|tomillo|mejorana|bicarbonato|polvo para hornear|vinagre .*|hielo|fecula de maiz|clavo|nuez moscada|huesos de res|manteca de cerdo|hoja para tamal|hoja de platano|extracto de vainilla|salsa inglesa|salsa de soya|mostaza.*|azucar|harina de trigo)$/;
+const FUERA=/^(sal|agua purificada|agua mineral con gas|aceite .*|consome de pollo en polvo|pimienta .*|laurel|oregano|comino|tomillo|mejorana|bicarbonato|polvo para hornear|vinagre .*|hielo|fecula de maiz|clavo|nuez moscada|huesos de res|manteca de cerdo|hoja para tamal|hoja de platano|extracto de vainilla|salsa inglesa|salsa de soya|mostaza.*|azucar|harina de trigo)$/;
 // …salvo en postres y bebidas, donde azúcar, harina, mantequilla o limón sí son lo principal
-const FUERA_DULCE=/^(sal|aceite .*|bicarbonato|polvo para hornear|hielo|fecula de maiz|clavo|nuez moscada|extracto de vainilla)$/;
+const FUERA_DULCE=/^(sal|agua purificada|agua mineral con gas|aceite .*|bicarbonato|polvo para hornear|hielo|fecula de maiz|clavo|nuez moscada|extracto de vainilla)$/;
 
 // Importancia: [expresión, factor]
 const PESA=[
@@ -39,7 +39,7 @@ const LLANO=[
  [/^haba fresca$/,"habas"],[/^huitlacoche fresco$/,"huitlacoche"],[/^chile piquin molido$/,"chile piquín"],[/^canela en raja$/,"canela"],
  [/^canela molida$/,"canela"],[/^datil sin hueso$/,"dátil"],[/^salsa sriracha$/,"salsa Sriracha"],[/^vaina de vainilla$/,"vainilla"],
  [/^rabano con hojas.*$/,"rábanos"],[/^rabano$/,"rábano"],[/^hoja santa$/,"hoja santa"],[/^platano macho$/,"plátano macho"],
- [/^cana de azucar$/,"caña"],[/^ciruela pasa$/,"ciruela pasa"],[/^cebolla cambray$/,"cebollitas"],[/^zacate limon$/,"té limón"]
+ [/^cana de azucar$/,"caña"],[/^ciruela pasa$/,"ciruela pasa"],[/^cebolla cambray$/,"cebollitas"],[/^zacate limon$/,"té limón"],[/^miel de abeja$/,"miel"],[/^yogur natural$/,"yogur"],[/^clara de huevo$/,"clara de huevo"]
 ];
 const llano=n=>{n=n.replace(/\s*\([^)]*\)/g,"").trim();const k=norm(n);for(const [re,t] of LLANO)if(re.test(k))return t;return n.charAt(0).toLowerCase()+n.slice(1)};
 

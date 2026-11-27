@@ -48,6 +48,10 @@ const AL=["pollo","res","cerdo","pescado","verduras","huevo","frijol","arroz","m
   for(const a of d.al)if(!AL.includes(a))err.push(d.n+": alimento desconocido «"+a+"»");
   if(!d.mo.length)err.push(d.n+": sin momento del día");for(const m of d.mo)if(!MO.includes(m))err.push(d.n+": momento desconocido «"+m+"»");
   for(const p of d.s)if(!/^[^:]{2,45}: \S/.test(p))err.push(d.n+": paso sin «Título: detalle» → "+p.slice(0,40))}
+ // Limpia paladares: además deben decir cuándo se sirven (cu) y para qué alimentos convienen (pa), y traer fuente
+ for(const d of BASE.RECETAS){if(d.t!=="Limpia paladar"){if(d.cu||d.pa)err.push(d.n+": trae «cu» o «pa» sin ser limpia paladar");continue}
+  if(!d.niv)err.push(d.n+": limpia paladar sin clasificar");if((d.cu||"").trim().length<30)err.push(d.n+": falta «cu» (cuándo se sirve)");if((d.pa||"").trim().length<30)err.push(d.n+": falta «pa» (para qué alimentos)");
+  if(!d.fx&&!(d.f&&d.u))err.push(d.n+": sin fuente");if(!(d.r||"").trim())err.push(d.n+": sin nota sobre el origen de las cantidades")}
  if(err.length)throw new Error("Clasificación:\n - "+err.join("\n - "));
  const sug=BASE.RECETAS.filter(d=>d.niv);
  log("¿Qué cocinar hoy?: "+sug.length+" recetas sugeribles. Por botón (básicas/intermedias/elaboradas · desayuno/comida/cena):");
@@ -59,7 +63,7 @@ const PESO={"Laurel":0.3,"Queso de cabra":100,"Frijol":1,"Perejil":50,"Cilantro"
 for(const d of BASE.RECETAS)d.i=d.i.map(([n,q,u])=>{const p=BASE.PRECIOS.find(p=>p[0].toLowerCase()==n.toLowerCase());if(!p)return[n,q,u];const por={g:"kg",kg:"kg",ml:"L",L:"L",pza:"pza"}[u];if(p[2]===por)return[n,q,u];const w=PESO[n]||50;
   if(p[2]==="kg"&&u==="ml")return[n,q,"g"];if(p[2]==="L"&&u==="g")return[n,q,"ml"];if(p[2]==="kg"&&u==="pza")return[n,+(q*w).toFixed(2),"g"];if(p[2]==="pza"&&(u==="g"||u==="ml"))return[n,+(q/w).toFixed(2),"pza"];if(p[2]==="L"&&u==="pza")return[n,+(q*w).toFixed(2),"ml"];return[n,q,u]});
 // «Lleva: …» para las tarjetas de ideas (libro/lleva.js): se calcula con las unidades ya ajustadas
-{const lleva=require("./libro/lleva.js");for(const d of BASE.RECETAS){if(!d.niv)continue;d.ll=lleva(d,PESO);if(!d.ll)throw new Error("Sin «Lleva» para "+d.n)}}
+{const lleva=require("./libro/lleva.js");for(const d of BASE.RECETAS){if(!d.niv)continue;d.ll=d.ll||lleva(d,PESO);if(!d.ll)throw new Error("Sin «Lleva» para "+d.n)}}
 // Consejos de Cocinología para todas las recetas
 for(const d of BASE.RECETAS){
   const text=d.n;const temas=[];
